@@ -2,7 +2,9 @@
 
 > Provider-agnostic edge compute SDK for AI workload routing — Python edition.
 
-Axon routes your AI workloads to the fastest, cheapest available edge compute provider — io.net, Akash, Acurast, Fluence, or Koii — through a single unified interface.
+Axon routes your AI workloads to the fastest, cheapest available compute provider — io.net, Akash, Acurast, Fluence, Koii, AWS, GCP, Azure, Cloudflare, or Fly.io — through a single unified interface.
+
+> **Pre-release:** v0.1.x is early access. APIs may change between minor versions.
 
 ## Install
 
@@ -54,6 +56,29 @@ Then hit `POST /v1/chat/completions` with any OpenAI-compatible client.
 - `axon-llama-3-8b` — Akash container
 - `axon-tee-phi-3-mini` — Acurast TEE
 
+## Cloud providers
+
+Install optional extras for AWS, GCP, or Azure:
+
+```bash
+pip install axon[aws]          # boto3
+pip install axon[gcp]          # google-auth
+pip install axon[azure]        # azure-identity + azure-mgmt-containerinstance
+pip install axon[cloudflare]   # Cloudflare Workers (no extra deps)
+pip install axon[fly]          # Fly.io (no extra deps)
+pip install axon[all]          # everything
+```
+
+Then authenticate:
+
+```bash
+axon auth aws
+axon auth gcp
+axon auth azure
+axon auth cloudflare
+axon auth fly
+```
+
 ## CLI
 
 ```bash
@@ -66,4 +91,4 @@ axon send <processor-id> '{"prompt": "hello"}'
 
 ## License
 
-Apache-2.0 © [Axon](https://axon.dev)
+Apache-2.0 © [Axon](https://github.com/deyzho/axon)

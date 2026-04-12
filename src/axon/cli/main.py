@@ -183,14 +183,41 @@ def auth(
         "acurast": [("ACURAST_MNEMONIC", "Acurast substrate mnemonic")],
         "fluence": [("FLUENCE_PRIVATE_KEY", "Fluence hex private key")],
         "koii": [("KOII_WALLET_PATH", "Koii wallet.json path")],
+        "aws": [
+            ("AWS_ACCESS_KEY_ID", "AWS Access Key ID"),
+            ("AWS_SECRET_ACCESS_KEY", "AWS Secret Access Key"),
+            ("AWS_DEFAULT_REGION", "AWS region (e.g. us-east-1)"),
+        ],
+        "gcp": [
+            ("GOOGLE_APPLICATION_CREDENTIALS", "Path to GCP service account JSON"),
+            ("GCP_PROJECT_ID", "GCP project ID"),
+        ],
+        "azure": [
+            ("AZURE_CLIENT_ID", "Azure client ID"),
+            ("AZURE_CLIENT_SECRET", "Azure client secret"),
+            ("AZURE_TENANT_ID", "Azure tenant ID"),
+            ("AZURE_SUBSCRIPTION_ID", "Azure subscription ID"),
+        ],
+        "cloudflare": [
+            ("CLOUDFLARE_API_TOKEN", "Cloudflare API token"),
+            ("CLOUDFLARE_ACCOUNT_ID", "Cloudflare account ID"),
+        ],
+        "fly": [("FLY_API_TOKEN", "Fly.io API token")],
     }
 
     if provider not in provider_prompts:
         console.print(f"[red]Unknown provider:[/red] {provider}")
+        console.print(f"Supported: {', '.join(sorted(provider_prompts))}")
         raise typer.Exit(1)
 
+    def _sanitize_value(v: str) -> str:
+        """Strip characters that could inject new lines into the .env file."""
+        return v.replace("\r", "").replace("\n", "")
+
     for env_var, prompt_text in provider_prompts[provider]:
-        value = typer.prompt(prompt_text, hide_input="KEY" in env_var or "MNEMONIC" in env_var)
+        sensitive = "KEY" in env_var or "MNEMONIC" in env_var or "SECRET" in env_var or "TOKEN" in env_var
+        raw_value = typer.prompt(prompt_text, hide_input=sensitive)
+        value = _sanitize_value(raw_value)
         # Update or append to .env
         updated = False
         for i, line in enumerate(lines):
@@ -202,6 +229,9 @@ def auth(
             lines.append(f"{env_var}={value}")
 
     env_path.write_text("\n".join(lines) + "\n")
+    # Restrict .env permissions to owner-read/write only (prevents other OS users
+    # from reading credentials stored in plain text).
+    os.chmod(str(env_path), 0o600)
     console.print(f"[green]✓[/green] Credentials saved to .env")
     console.print(f"\nRun [cyan]axon deploy[/cyan] to deploy your workload.")
 

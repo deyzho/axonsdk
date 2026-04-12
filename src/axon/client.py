@@ -65,6 +65,18 @@ class AxonClient:
 
     async def send(self, processor_id: str, payload: Any) -> None:
         """Send a payload to a running processor."""
+        import re
+        if not processor_id or not isinstance(processor_id, str):
+            raise AxonError("processor_id must be a non-empty string.")
+        if len(processor_id) > 512:
+            raise AxonError("processor_id exceeds maximum length of 512 characters.")
+        # Reject control characters, null bytes, and path traversal sequences to
+        # prevent injection if the id is later embedded in a URL or shell command.
+        if re.search(r'[\x00-\x1f\x7f]|\.\.[\\/]|[\\/]', processor_id):
+            raise AxonError(
+                "Invalid processor_id: must not contain control characters, "
+                "null bytes, or path traversal sequences."
+            )
         await self._provider.send(processor_id, payload)
 
     def on_message(self, handler: Callable[[Message], None]) -> Callable[[], None]:

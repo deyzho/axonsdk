@@ -39,7 +39,11 @@ class HealthStatus(str, Enum):
 class DeploymentConfig(BaseModel):
     """Configuration for a deployment."""
 
-    name: str = Field(..., description="Human-readable deployment name")
+    name: str = Field(
+        ...,
+        description="Human-readable deployment name",
+        pattern=r'^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$',
+    )
     entry_point: str = Field(..., description="Path to entry point file")
     runtime: RuntimeType = RuntimeType.NODEJS
     env: dict[str, str] = Field(default_factory=dict, description="Environment variables")
