@@ -9,7 +9,12 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 
-ProviderName = Literal["ionet", "akash", "acurast", "fluence", "koii"]
+ProviderName = Literal[
+    # Edge / decentralised
+    "ionet", "akash", "acurast", "fluence", "koii",
+    # Cloud
+    "aws", "gcp", "azure", "cloudflare", "fly",
+]
 
 
 class RuntimeType(str, Enum):

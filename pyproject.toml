@@ -39,8 +39,21 @@ inference = [
 cli = [
     "questionary>=2.0",
 ]
+aws = [
+    "boto3>=1.34",
+]
+gcp = [
+    "google-auth>=2.29",
+    "google-auth-httplib2>=0.2",
+]
+azure = [
+    "azure-identity>=1.16",
+    "azure-mgmt-containerinstance>=10",
+]
+cloudflare = []   # httpx is already a core dependency
+fly = []          # httpx is already a core dependency
 all = [
-    "axon[inference,cli]",
+    "axon[inference,cli,aws,gcp,azure]",
 ]
 dev = [
     "pytest>=8",
