@@ -82,7 +82,6 @@ class AWSProvider(IAxonProvider):
             self._boto_session = boto3.Session(
                 aws_access_key_id=access_key,
                 aws_secret_access_key=secret,
-                aws_secret_access_key_id=None,
                 region_name=self._region,
             )
         else:

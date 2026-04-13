@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import tempfile
 import time
 from datetime import datetime, timezone
@@ -15,6 +14,7 @@ import httpx
 
 from axon.exceptions import AuthError, DeploymentError, ProviderError
 from axon.providers.base import IAxonProvider
+from axon.security import assert_safe_url
 from axon.types import (
     CostEstimate,
     Deployment,
@@ -22,11 +22,6 @@ from axon.types import (
     HealthStatus,
     Message,
     ProviderHealth,
-)
-
-# Private IP ranges blocked to prevent SSRF
-_PRIVATE_IP_RE = re.compile(
-    r"^https?://(localhost|127\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)"
 )
 
 # Maximum response body size (4 MiB — larger than other providers for GPU output)
@@ -369,17 +364,11 @@ def _filter_env(env: dict[str, str]) -> dict[str, str]:
 
 
 def _validate_ipfs_url(url: str) -> None:
-    if not url.startswith("https://"):
-        raise DeploymentError("ionet", "IPFS URL must use HTTPS.")
-    if _PRIVATE_IP_RE.match(url):
-        raise DeploymentError("ionet", "IPFS URL must not point to a private/local address.")
+    assert_safe_url(url, "ionet", "IPFS URL")
 
 
 def _validate_endpoint_url(url: str) -> None:
-    if not url.startswith("https://"):
-        raise ProviderError("ionet", "Worker endpoint must use HTTPS.")
-    if _PRIVATE_IP_RE.match(url):
-        raise ProviderError("ionet", "Worker endpoint must not point to a private/local address.")
+    assert_safe_url(url, "ionet", "Worker endpoint")
 
 
 def _map_status(raw: str) -> str:

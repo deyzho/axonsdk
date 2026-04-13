@@ -85,9 +85,36 @@ def deploy(
         console.print("[red]Error:[/red] AXON_SECRET_KEY not set. Run `axon auth` first.")
         raise typer.Exit(1)
 
-    console.print(f"Deploying to [cyan]{config.provider}[/cyan]...")
-    # TODO: implement full deploy flow
-    console.print("[yellow]Deploy not yet implemented for Python SDK[/yellow]")
+    from axon.types import DeploymentConfig
+
+    # Convert AxonConfig → DeploymentConfig
+    deploy_config = DeploymentConfig(
+        name=config.project_name,
+        entry_point=config.entry_point,
+        runtime=config.runtime,
+        env=config.env,
+        metadata=config.metadata,
+    )
+
+    async def _run() -> None:
+        async with AxonClient(provider=config.provider, secret_key=secret_key) as client:
+            with console.status(f"Deploying to [cyan]{config.provider}[/cyan]..."):
+                deployment = await client.deploy(deploy_config)
+
+            table = Table(title="Deployment")
+            table.add_column("Field", style="bold")
+            table.add_column("Value", style="cyan")
+            table.add_row("ID", deployment.id)
+            table.add_row("Status", deployment.status)
+            table.add_row("Provider", deployment.provider)
+            table.add_row("Endpoint", deployment.endpoint or "(pending)")
+            console.print(table)
+
+    try:
+        asyncio.run(_run())
+    except Exception as exc:
+        console.print(f"[red]Error:[/red] {exc}")
+        raise typer.Exit(1)
 
 
 @app.command()

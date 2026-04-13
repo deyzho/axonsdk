@@ -16,6 +16,7 @@ import httpx
 
 from axon.exceptions import AuthError, DeploymentError, ProviderError
 from axon.providers.base import IAxonProvider
+from axon.security import assert_safe_url
 from axon.types import (
     CostEstimate,
     Deployment,
@@ -25,9 +26,6 @@ from axon.types import (
     ProviderHealth,
 )
 
-_PRIVATE_IP_RE = re.compile(
-    r"^https?://(localhost|127\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)"
-)
 _MAX_RESPONSE_BYTES = 1 * 1024 * 1024  # 1 MiB
 
 # Blocks per hour on Akash (≈ 6s block time)
@@ -386,17 +384,11 @@ def _filter_env(env: dict[str, str]) -> dict[str, str]:
 
 
 def _validate_ipfs_url(url: str, provider: str) -> None:
-    if not url.startswith("https://"):
-        raise DeploymentError(provider, "IPFS URL must use HTTPS.")
-    if _PRIVATE_IP_RE.match(url):
-        raise DeploymentError(provider, "IPFS URL must not point to a private/local address.")
+    assert_safe_url(url, provider, "IPFS URL")
 
 
 def _validate_endpoint_url(url: str, provider: str) -> None:
-    if not url.startswith("https://"):
-        raise ProviderError(provider, "Endpoint must use HTTPS.")
-    if _PRIVATE_IP_RE.match(url):
-        raise ProviderError(provider, "Endpoint must not point to a private/local address.")
+    assert_safe_url(url, provider, "Endpoint")
 
 
 def _require_cli(name: str, docs_url: str) -> None:
