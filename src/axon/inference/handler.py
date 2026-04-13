@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any
+import json
+from typing import Any, AsyncGenerator
 
 try:
     from fastapi import FastAPI, HTTPException, Request
@@ -58,11 +59,37 @@ def create_inference_app(secret_key: str, **kwargs: Any) -> FastAPI:
             raise HTTPException(status_code=400, detail="messages is required")
 
         try:
-            result = await router.route(model=model, messages=messages, stream=stream)
+            if stream:
+                # route() returns an AsyncGenerator when stream=True —
+                # wrap it in a StreamingResponse with SSE framing.
+                async_gen: AsyncGenerator[Any, None] = router.route(
+                    model=model, messages=messages, stream=True
+                )  # type: ignore[assignment]
+
+                async def _sse_generator() -> AsyncGenerator[bytes, None]:
+                    try:
+                        async for chunk in async_gen:
+                            yield b"data: " + json.dumps(chunk).encode() + b"\n\n"
+                    except Exception as exc:  # noqa: BLE001
+                        yield b"data: " + json.dumps({"error": str(exc)}).encode() + b"\n\n"
+                    finally:
+                        yield b"data: [DONE]\n\n"
+
+                return StreamingResponse(
+                    _sse_generator(),
+                    media_type="text/event-stream",
+                    headers={
+                        "Cache-Control": "no-cache",
+                        "X-Accel-Buffering": "no",
+                    },
+                )
+            else:
+                # route() returns a coroutine when stream=False — await it.
+                result = await router.route(model=model, messages=messages, stream=False)
+                return JSONResponse(result)
+
         except Exception as exc:
             raise HTTPException(status_code=502, detail=str(exc)) from exc
-
-        return JSONResponse(result)
 
     @app.on_event("shutdown")
     async def shutdown() -> None:
