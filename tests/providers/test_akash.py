@@ -68,7 +68,7 @@ async def test_estimate_returns_cost() -> None:
         entry_point="src/index.js",
         runtime=RuntimeType.NODEJS,
         memory_mb=512,
-        timeout_ms=3_600_000,  # 1 hour
+        timeout_ms=30_000,
     )
     estimate = await provider.estimate(config)
 

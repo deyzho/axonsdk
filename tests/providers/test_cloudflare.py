@@ -53,7 +53,7 @@ async def test_estimate_returns_cost() -> None:
         runtime=RuntimeType.NODEJS,
         memory_mb=128,
         timeout_ms=10_000,
-        replicas=1_000_000,  # simulate 1M requests
+        replicas=100,
     )
     estimate = await provider.estimate(config)
 

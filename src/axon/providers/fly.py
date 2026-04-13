@@ -330,7 +330,6 @@ class FlyProvider(IAxonProvider):
             usd_estimate=total,
             per_hour=True,
             breakdown={
-                "vm_size": vm_size,
                 "hourly_rate": hourly,
                 "replicas": float(config.replicas),
             },
