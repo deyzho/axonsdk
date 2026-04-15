@@ -1,6 +1,11 @@
 # Axon SDK
 
-**[axonsdk.dev](https://axonsdk.dev) · [PyPI](https://pypi.org/project/axon/) · [GitHub](https://github.com/deyzho/axon)**
+[![CI](https://github.com/deyzho/axon/actions/workflows/publish.yml/badge.svg)](https://github.com/deyzho/axon/actions/workflows/publish.yml)
+[![PyPI](https://img.shields.io/pypi/v/axonsdk)](https://pypi.org/project/axonsdk/)
+[![Python](https://img.shields.io/pypi/pyversions/axonsdk)](https://pypi.org/project/axonsdk/)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
+
+**[axonsdk.dev](https://axonsdk.dev) · [PyPI](https://pypi.org/project/axonsdk/) · [GitHub](https://github.com/deyzho/axon)**
 
 **One SDK. Any compute. Route AI inference to the fastest, cheapest backend — cloud, edge, or your own infrastructure.**
 
@@ -39,13 +44,15 @@ Axon is a universal AI compute routing layer. Stop rewriting integrations every 
 ## Install
 
 ```bash
-pip install axon              # core SDK
-pip install axon[inference]   # + FastAPI OpenAI-compatible server
-pip install axon[aws]         # + boto3
-pip install axon[gcp]         # + google-auth
-pip install axon[azure]       # + azure-identity + azure-mgmt-containerinstance
-pip install axon[all]         # everything
+pip install axonsdk              # core SDK
+pip install axonsdk[inference]   # + FastAPI OpenAI-compatible server
+pip install axonsdk[aws]         # + boto3
+pip install axonsdk[gcp]         # + google-auth
+pip install axonsdk[azure]       # + azure-identity + azure-mgmt-containerinstance
+pip install axonsdk[all]         # everything
 ```
+
+> **Note:** The PyPI package is published as `axonsdk`. A name-reclamation request (PEP 541) has been filed for the `axon` name.
 
 ---
 
@@ -306,6 +313,21 @@ High-impact areas:
 - Integration tests against live provider sandboxes
 - Additional provider support
 - Template library
+
+---
+
+## Ecosystem
+
+Axon is the **Python** compute routing SDK. If you're building with **TypeScript / Node.js**, React Native, or deploying via a CLI, see the companion repositories:
+
+| Package | Description |
+|---|---|
+| [`@axonsdk/sdk`](https://github.com/deyzho/phonixsdk) | TypeScript SDK — same providers, same routing strategies |
+| [`@axonsdk/mobile`](https://github.com/deyzho/phonixsdk) | React Native / Expo SDK for iOS & Android |
+| [`@axonsdk/cli`](https://github.com/deyzho/phonixsdk) | CLI — `axon init`, `axon deploy`, `axon status` |
+| [`@axonsdk/inference`](https://github.com/deyzho/phonixsdk) | OpenAI-compatible inference handler for Next.js |
+
+**[phonixsdk.dev](https://phonixsdk.dev)** — full documentation for the TypeScript ecosystem.
 
 ---
 
