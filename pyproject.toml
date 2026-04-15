@@ -102,4 +102,3 @@ ignore_missing_imports = true
 module = ["axon.providers.aws", "axon.providers.gcp", "axon.providers.azure"]
 warn_return_any = false
 disallow_any_generics = false
-disallow_any_explicit = false
