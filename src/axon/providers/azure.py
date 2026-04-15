@@ -177,7 +177,7 @@ class AzureProvider(IAxonProvider):
             ip_address=IpAddress(ports=[Port(port=8000)], type="Public"),
         )
 
-        aci_client = ContainerInstanceManagementClient(self._credential, self._subscription_id)
+        aci_client = ContainerInstanceManagementClient(self._credential, self._subscription_id)  # type: ignore[arg-type]
 
         def _create() -> Any:
             return aci_client.container_groups.begin_create_or_update(
@@ -309,7 +309,7 @@ class AzureProvider(IAxonProvider):
             raise ProviderError("azure", "Not connected.")
         try:
             from azure.mgmt.containerinstance import ContainerInstanceManagementClient
-            aci_client = ContainerInstanceManagementClient(self._credential, self._subscription_id)
+            aci_client = ContainerInstanceManagementClient(self._credential, self._subscription_id)  # type: ignore[arg-type]
             groups = await asyncio.get_event_loop().run_in_executor(
                 None,
                 lambda: list(
@@ -318,12 +318,12 @@ class AzureProvider(IAxonProvider):
             )
             return [
                 Deployment(
-                    id=g.name,
-                    name=g.name,
+                    id=g.name or "",
+                    name=g.name or "",
                     provider="azure",
                     status="active" if g.provisioning_state == "Succeeded" else "pending",
                     created_at=datetime.now(UTC),
-                    endpoint=self._container_endpoints.get(g.name),
+                    endpoint=self._container_endpoints.get(g.name or ""),
                     metadata={"service": "aci", "region": self._region},
                 )
                 for g in groups
@@ -337,7 +337,7 @@ class AzureProvider(IAxonProvider):
             return
         try:
             from azure.mgmt.containerinstance import ContainerInstanceManagementClient
-            aci_client = ContainerInstanceManagementClient(self._credential, self._subscription_id)
+            aci_client = ContainerInstanceManagementClient(self._credential, self._subscription_id)  # type: ignore[arg-type]
             # deployment_id may be full Azure resource ID or just container group name
             name = deployment_id.split("/")[-1] if "/" in deployment_id else deployment_id
             await asyncio.get_event_loop().run_in_executor(

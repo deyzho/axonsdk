@@ -32,7 +32,7 @@ def create_inference_app(secret_key: str, **kwargs: Any) -> FastAPI:
     app = FastAPI(title="Axon Inference API", version="0.1.0")
     router = AxonInferenceRouter({"secret_key": secret_key, **kwargs})
 
-    @app.get("/v1/models")  # type: ignore[untyped-decorator]
+    @app.get("/v1/models")
     async def list_models() -> JSONResponse:
         models = [
             {
@@ -47,7 +47,7 @@ def create_inference_app(secret_key: str, **kwargs: Any) -> FastAPI:
         ]
         return JSONResponse({"object": "list", "data": models})
 
-    @app.post("/v1/chat/completions")  # type: ignore[untyped-decorator]
+    @app.post("/v1/chat/completions")
     async def chat_completions(request: Request) -> Any:
         body = await request.json()
         model = body.get("model")
@@ -92,7 +92,7 @@ def create_inference_app(secret_key: str, **kwargs: Any) -> FastAPI:
         except Exception as exc:
             raise HTTPException(status_code=502, detail=str(exc)) from exc
 
-    @app.on_event("shutdown")  # type: ignore[untyped-decorator]
+    @app.on_event("shutdown")
     async def shutdown() -> None:
         await router.close()
 
