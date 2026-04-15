@@ -94,3 +94,12 @@ select = ["E", "F", "I", "UP"]
 python_version = "3.11"
 strict = true
 ignore_missing_imports = true
+
+# Cloud provider files use untyped third-party SDKs (boto3, google-auth,
+# azure-sdk) that return Any throughout. Relax strict checks per-module
+# rather than polluting production code with type: ignore comments.
+[[tool.mypy.overrides]]
+module = ["axon.providers.aws", "axon.providers.gcp", "axon.providers.azure"]
+warn_return_any = false
+disallow_any_generics = false
+disallow_any_explicit = false
