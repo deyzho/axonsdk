@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "axon"
-version = "0.1.6"
+version = "0.1.7"
 description = "Provider-agnostic edge compute SDK for AI workload routing"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -71,7 +71,8 @@ dev = [
 axon = "axon.cli.main:app"
 
 [project.urls]
-Homepage = "https://axon.dev"
+Homepage = "https://axonsdk.dev"
+Documentation = "https://axonsdk.dev/docs"
 Repository = "https://github.com/deyzho/axon"
 Issues = "https://github.com/deyzho/axon/issues"
 

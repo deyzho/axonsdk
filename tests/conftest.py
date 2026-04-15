@@ -34,5 +34,5 @@ def sample_deployment() -> Deployment:
         provider="ionet",
         status="active",
         created_at=datetime(2026, 1, 1, 12, 0, 0),
-        endpoint="https://dep_abc123.edge.axon.dev",
+        endpoint="https://dep_abc123.edge.axonsdk.dev",
     )

@@ -7,6 +7,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.1.7] — 2026-04-14
+
+### Changed
+- **Domain:** All documentation, metadata, and contact addresses updated from `axon.dev` to `axonsdk.dev`
+- **pyproject.toml:** `Homepage` updated to `https://axonsdk.dev`; `Documentation` URL added (`https://axonsdk.dev/docs`)
+- **README:** Added `axonsdk.dev` badge links at top; footer updated with new domain and contact
+- **Tests:** `conftest.py` fixture endpoint updated to `edge.axonsdk.dev`
+
+---
+
 ## [0.1.6] — 2026-04-13
 
 ### Added
@@ -75,6 +85,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+[0.1.7]: https://github.com/deyzho/axon/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/deyzho/axon/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/deyzho/axon/compare/v0.1.2...v0.1.5
 [0.1.2]: https://github.com/deyzho/axon/compare/v0.1.0...v0.1.2
