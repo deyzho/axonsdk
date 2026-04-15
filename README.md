@@ -1,11 +1,11 @@
 # Axon SDK
 
 [![CI](https://github.com/deyzho/axon/actions/workflows/publish.yml/badge.svg)](https://github.com/deyzho/axon/actions/workflows/publish.yml)
-[![PyPI](https://img.shields.io/pypi/v/axonsdk)](https://pypi.org/project/axonsdk/)
-[![Python](https://img.shields.io/pypi/pyversions/axonsdk)](https://pypi.org/project/axonsdk/)
+[![PyPI](https://img.shields.io/badge/PyPI-pending-orange)](https://github.com/pypi/support/issues)
+[![Python](https://img.shields.io/badge/python-3.11%20|%203.12%20|%203.13-blue)](https://pypi.org/project/axonsdk/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
-**[axonsdk.dev](https://axonsdk.dev) · [PyPI](https://pypi.org/project/axonsdk/) · [GitHub](https://github.com/deyzho/axon)**
+**[axonsdk.dev](https://axonsdk.dev) · [GitHub](https://github.com/deyzho/axon)**
 
 **One SDK. Any compute. Route AI inference to the fastest, cheapest backend — cloud, edge, or your own infrastructure.**
 
@@ -52,7 +52,11 @@ pip install axonsdk[azure]       # + azure-identity + azure-mgmt-containerinstan
 pip install axonsdk[all]         # everything
 ```
 
-> **Note:** The PyPI package is published as `axonsdk`. A name-reclamation request (PEP 541) has been filed for the `axon` name.
+> **PyPI publication pending.** The `axon` name on PyPI is currently held by an abandoned 2013 package. A PEP 541 name-reclamation request has been filed. Once approved, `pip install axonsdk` will work. In the meantime, install directly from source:
+>
+> ```bash
+> pip install git+https://github.com/deyzho/axon.git
+> ```
 
 ---
 
