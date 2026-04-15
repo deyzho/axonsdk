@@ -62,6 +62,7 @@ jobs:
     name: Publish to PyPI
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')
+    continue-on-error: true   # PyPI OIDC trusted publisher must be configured first
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
