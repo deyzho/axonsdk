@@ -71,7 +71,12 @@ def create_inference_app(secret_key: str, **kwargs: Any) -> FastAPI:
         _rate_limit_store[key] = [t for t in timestamps if t > window_start]
         if len(_rate_limit_store[key]) >= _RATE_LIMIT_RPM:
             return JSONResponse(
-                {"error": {"message": "Rate limit exceeded. Max 60 requests per minute.", "code": "rate_limit_exceeded"}},
+                {
+                    "error": {
+                        "message": "Rate limit exceeded. Max 60 requests per minute.",
+                        "code": "rate_limit_exceeded",
+                    }
+                },
                 status_code=429,
             )
         _rate_limit_store[key].append(now)
