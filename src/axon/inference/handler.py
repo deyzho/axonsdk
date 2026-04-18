@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import time
-from collections import defaultdict
+from collections import OrderedDict
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
@@ -20,8 +20,42 @@ except ImportError as exc:
 
 from axon.inference.router import AXON_MODELS, AxonInferenceRouter
 
-_rate_limit_store: dict[str, list[float]] = defaultdict(list)
-_RATE_LIMIT_RPM = 60  # requests per minute
+_RATE_LIMIT_RPM = 60       # requests per minute
+_RATE_LIMIT_MAX_KEYS = 10_000  # evict oldest key when store exceeds this size
+
+
+class _RateLimitStore:
+    """Per-handler sliding-window rate limit store with LRU key eviction.
+
+    Tracks request timestamps per API key within a 60-second window.
+    When the number of tracked keys exceeds ``_RATE_LIMIT_MAX_KEYS``,
+    the oldest-inserted key is evicted to bound memory usage.
+    """
+
+    def __init__(self) -> None:
+        # OrderedDict preserves insertion order — used for LRU eviction.
+        self._store: OrderedDict[str, list[float]] = OrderedDict()
+
+    def is_allowed(self, key: str, now: float) -> bool:
+        """Return True if the request is within the rate limit, False if exceeded."""
+        window_start = now - 60.0
+        timestamps = self._store.get(key, [])
+        # Prune expired timestamps
+        timestamps = [t for t in timestamps if t > window_start]
+
+        if len(timestamps) >= _RATE_LIMIT_RPM:
+            self._store[key] = timestamps
+            return False
+
+        timestamps.append(now)
+        self._store[key] = timestamps
+        self._store.move_to_end(key)  # Mark as recently used
+
+        # Evict oldest key when store grows too large
+        if len(self._store) > _RATE_LIMIT_MAX_KEYS:
+            self._store.popitem(last=False)
+
+        return True
 
 
 def create_inference_app(secret_key: str, **kwargs: Any) -> FastAPI:
@@ -36,6 +70,7 @@ def create_inference_app(secret_key: str, **kwargs: Any) -> FastAPI:
         uvicorn.run(app, host="0.0.0.0", port=8000)
     """
     router = AxonInferenceRouter({"secret_key": secret_key, **kwargs})
+    _rl_store = _RateLimitStore()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
@@ -64,12 +99,7 @@ def create_inference_app(secret_key: str, **kwargs: Any) -> FastAPI:
     @app.middleware("http")
     async def rate_limit(request: Request, call_next: Any) -> Any:
         key = request.headers.get("Authorization", "anonymous")
-        now = time.monotonic()
-        window_start = now - 60.0
-        timestamps = _rate_limit_store[key]
-        # Remove expired entries
-        _rate_limit_store[key] = [t for t in timestamps if t > window_start]
-        if len(_rate_limit_store[key]) >= _RATE_LIMIT_RPM:
+        if not _rl_store.is_allowed(key, time.monotonic()):
             return JSONResponse(
                 {
                     "error": {
@@ -79,7 +109,6 @@ def create_inference_app(secret_key: str, **kwargs: Any) -> FastAPI:
                 },
                 status_code=429,
             )
-        _rate_limit_store[key].append(now)
         return await call_next(request)
 
     @app.get("/v1/models")

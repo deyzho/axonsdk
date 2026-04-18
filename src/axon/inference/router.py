@@ -10,6 +10,7 @@ from typing import Any
 import httpx
 
 from axon.exceptions import ProviderError
+from axon.security import assert_safe_url
 
 AXON_MODELS = {
     "axon-llama-3-70b": {
@@ -185,6 +186,7 @@ class AxonInferenceRouter:
                 "inference",
                 f"Set {env_var} to the inference endpoint for {provider}",
             )
+        assert_safe_url(url, provider, "inference endpoint")
         return url
 
     async def close(self) -> None:

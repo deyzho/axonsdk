@@ -60,7 +60,7 @@ jobs:
 
   publish:
     name: Publish to PyPI
-    needs: test
+    needs: [test, sbom]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     environment: pypi
