@@ -21,6 +21,15 @@ from axon.types import (
     RoutingStrategy,
 )
 
+# Reference workload used to fetch comparable cost estimates across providers.
+# All providers are queried with the same spec so costs are apples-to-apples.
+_REFERENCE_CONFIG = DeploymentConfig(
+    name="cost-probe",
+    entry_point="index.js",
+    memory_mb=512,
+    replicas=1,
+)
+
 
 class CircuitState:
     CLOSED = "closed"      # Normal operation
@@ -73,6 +82,10 @@ class ProviderSlot:
         self.circuit = CircuitBreaker()
         self.health = ProviderHealth(provider=provider.name, status=HealthStatus.HEALTHY)
         self.latency_samples: list[float] = []
+        # Last-known USD/hr cost for the reference workload (_REFERENCE_CONFIG).
+        # None until the first successful estimate(); providers with no estimate
+        # are treated as most expensive when COST routing is active.
+        self.cached_usd_per_hour: float | None = None
 
     @property
     def avg_latency(self) -> float:
@@ -126,6 +139,8 @@ class AxonRouter:
                     error=str(result),
                 )
 
+        # Seed cost estimates so COST routing is functional from the first request.
+        await self._refresh_cost_estimates()
         self._health_task = asyncio.create_task(self._health_loop())
 
     async def disconnect(self) -> None:
@@ -145,10 +160,16 @@ class AxonRouter:
         if self._strategy == RoutingStrategy.LATENCY:
             return min(available, key=lambda s: s.avg_latency)
         elif self._strategy == RoutingStrategy.COST:
-            # COST strategy: returns the lowest-cost available provider.
-            # Ordering: providers are pre-sorted by estimated cost at registration time.
-            # Full dynamic pricing oracle is on the roadmap (see ROADMAP.md).
-            return available[0]
+            # Sort by last-known USD/hr estimate for the reference workload.
+            # Estimates are fetched at connect() and refreshed every health-check
+            # cycle. Providers with no cached estimate are treated as most expensive
+            # (float("inf")) so they are used only as a last resort.
+            return min(
+                available,
+                key=lambda s: s.cached_usd_per_hour
+                if s.cached_usd_per_hour is not None
+                else float("inf"),
+            )
         elif self._strategy == RoutingStrategy.ROUND_ROBIN:
             idx = self._rr_index % len(available)
             self._rr_index += 1
@@ -196,8 +217,23 @@ class AxonRouter:
         """Return health status for all providers."""
         return {name: slot.health for name, slot in self._slots.items()}
 
+    async def _refresh_cost_estimates(self) -> None:
+        """Fetch cost estimates from all providers and cache the USD/hr rate.
+
+        Uses a fixed reference workload (_REFERENCE_CONFIG) so estimates are
+        directly comparable across providers. Failures are silently ignored —
+        a provider with no cached estimate is sorted last under COST routing.
+        """
+        estimates = await asyncio.gather(
+            *[slot.provider.estimate(_REFERENCE_CONFIG) for slot in self._slots.values()],
+            return_exceptions=True,
+        )
+        for slot, result in zip(self._slots.values(), estimates):
+            if isinstance(result, CostEstimate) and result.usd_estimate is not None:
+                slot.cached_usd_per_hour = result.usd_estimate
+
     async def _health_loop(self) -> None:
-        """Background task: periodically probe provider health."""
+        """Background task: periodically probe provider health and refresh cost estimates."""
         while True:
             await asyncio.sleep(self._health_check_interval)
             for slot in self._slots.values():
@@ -209,6 +245,8 @@ class AxonRouter:
                         status=HealthStatus.UNHEALTHY,
                         error=str(exc),
                     )
+            # Refresh cost estimates so COST routing stays accurate over time.
+            await self._refresh_cost_estimates()
 
     async def __aenter__(self) -> AxonRouter:
         await self.connect()
