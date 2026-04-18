@@ -236,7 +236,7 @@ class AkashProvider(IAxonProvider):
                   - sh
                   - -c
                   - |
-                    wget -q -O /app/bundle.js https://ipfs.io/ipfs/{bundle_cid} \\
+                    wget -q -O /app/bundle.js https://dweb.link/ipfs/{bundle_cid} \\
                     && node /app/bundle.js
                 expose:
                   - port: 3000
@@ -374,9 +374,9 @@ class AkashProvider(IAxonProvider):
         if not dseq:
             return  # Nothing to tear down
 
-        wallet = self._config.get("wallet_address", "") if hasattr(self, "_config") else ""
-        node = self._node
-        chain_id = self._chain_id
+        wallet = getattr(self, "_key_name", "") or ""
+        node = getattr(self, "_node", "https://rpc.akash.network:443") or "https://rpc.akash.network:443"
+        chain_id = getattr(self, "_chain_id", "akashnet-2") or "akashnet-2"
 
         try:
             proc = await asyncio.create_subprocess_exec(

@@ -16,6 +16,7 @@ import httpx
 
 from axon.exceptions import AuthError, DeploymentError, ProviderError
 from axon.providers.base import IAxonProvider
+from axon.security import assert_safe_url
 from axon.types import (
     CostEstimate,
     Deployment,
@@ -236,8 +237,7 @@ class AcurastProvider(IAxonProvider):
 
     async def _upload_ipfs(self, bundle_path: Path, ipfs_url: str) -> str:
         """Upload bundle to IPFS and return CID."""
-        if not ipfs_url.startswith("https://"):
-            raise DeploymentError("acurast", "ACURAST_IPFS_URL must use HTTPS.")
+        assert_safe_url(ipfs_url, "acurast", "IPFS URL")
 
         api_key = os.environ.get("ACURAST_IPFS_API_KEY")
         headers = {"Authorization": f"Basic {api_key}"} if api_key else {}

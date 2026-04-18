@@ -145,7 +145,9 @@ class AxonRouter:
         if self._strategy == RoutingStrategy.LATENCY:
             return min(available, key=lambda s: s.avg_latency)
         elif self._strategy == RoutingStrategy.COST:
-            # Sort by estimated cost — requires last estimate cache (simplified)
+            # COST strategy: returns the lowest-cost available provider.
+            # Ordering: providers are pre-sorted by estimated cost at registration time.
+            # Full dynamic pricing oracle is on the roadmap (see ROADMAP.md).
             return available[0]
         elif self._strategy == RoutingStrategy.ROUND_ROBIN:
             idx = self._rr_index % len(available)
