@@ -13,7 +13,7 @@ We actively maintain and issue security fixes for the following releases:
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Report security issues by emailing **security@axonsdk.dev**. You should receive a response within 48 hours. If you do not, please follow up to ensure we received your original message.
+Report security issues by inboxing deyzho. You should receive a response within 48 hours. If you do not, please follow up to ensure we received your original message.
 
 Please include the following in your report:
 
