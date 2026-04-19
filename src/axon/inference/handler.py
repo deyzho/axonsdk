@@ -15,7 +15,7 @@ try:
 except ImportError as exc:
     raise ImportError(
         "FastAPI is required for the inference handler. "
-        "Install it with: pip install axon[inference]"
+        "Install it with: pip install axonsdk-py[inference]"
     ) from exc
 
 from axon.inference.router import AXON_MODELS, AxonInferenceRouter

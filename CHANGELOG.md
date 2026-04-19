@@ -35,7 +35,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `ROADMAP.md` — v0.1–v1.0 milestones
 
 ### Changed
-- **Dependencies:** `eth-account` moved from core to optional `blockchain` extra — install with `pip install axon[blockchain]` (required for Akash, Acurast, Fluence, Koii providers)
+- **Dependencies:** `eth-account` moved from core to optional `blockchain` extra — install with `pip install axonsdk-py[blockchain]` (required for Akash, Acurast, Fluence, Koii providers)
 - **CI:** `--ignore-missing-imports` flag removed from CI mypy invocation — now configured permanently in `[tool.mypy]`
 - **CI:** `mypy` now reads `ignore_missing_imports = true` from `pyproject.toml`
 - **Project URLs:** Fixed `project.urls` in `pyproject.toml` — `Repository` now correctly points to `deyzho/axon`

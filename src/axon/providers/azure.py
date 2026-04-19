@@ -69,7 +69,7 @@ class AzureProvider(IAxonProvider):
         except ImportError as exc:
             raise ProviderError(
                 "azure",
-                "azure-identity is required. Install with: pip install axon[azure]",
+                "azure-identity is required. Install with: pip install axonsdk-py[azure]",
             ) from exc
 
         self._subscription_id = os.environ.get("AZURE_SUBSCRIPTION_ID", "")
@@ -143,7 +143,7 @@ class AzureProvider(IAxonProvider):
         except ImportError as exc:
             raise ProviderError(
                 "azure",
-                "azure-mgmt-containerinstance required. Install with: pip install axon[azure]",
+                "azure-mgmt-containerinstance required. Install with: pip install axonsdk-py[azure]",
             ) from exc
 
         container_name = _sanitise_name(config.name)

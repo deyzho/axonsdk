@@ -70,7 +70,7 @@ class AWSProvider(IAxonProvider):
         except ImportError as exc:
             raise ProviderError(
                 "aws",
-                "boto3 is required. Install with: pip install axon[aws]",
+                "boto3 is required. Install with: pip install axonsdk-py[aws]",
             ) from exc
 
         access_key = os.environ.get("AWS_ACCESS_KEY_ID")

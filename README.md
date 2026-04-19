@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/deyzho/axon/actions/workflows/publish.yml/badge.svg)](https://github.com/deyzho/axon/actions/workflows/publish.yml)
 [![PyPI](https://img.shields.io/badge/PyPI-pending-orange)](https://github.com/pypi/support/issues)
-[![Python](https://img.shields.io/badge/python-3.11%20|%203.12%20|%203.13-blue)](https://pypi.org/project/axon-py/)
+[![Python](https://img.shields.io/badge/python-3.11%20|%203.12%20|%203.13-blue)](https://pypi.org/project/axonsdk-py/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
 **[axonsdk.dev](https://axonsdk.dev) · [GitHub](https://github.com/deyzho/axon)**
@@ -44,15 +44,15 @@ Axon is a universal AI compute routing layer. Stop rewriting integrations every 
 ## Install
 
 ```bash
-pip install axon-py              # core SDK (mirrors the axon-ts npm packages)
-pip install "axon-py[inference]" # + FastAPI OpenAI-compatible server
-pip install "axon-py[aws]"       # + boto3
-pip install "axon-py[gcp]"       # + google-auth
-pip install "axon-py[azure]"     # + azure-identity + azure-mgmt-containerinstance
-pip install "axon-py[all]"       # everything
+pip install axonsdk-py              # core SDK (mirrors the axon-ts npm packages)
+pip install "axonsdk-py[inference]" # + FastAPI OpenAI-compatible server
+pip install "axonsdk-py[aws]"       # + boto3
+pip install "axonsdk-py[gcp]"       # + google-auth
+pip install "axonsdk-py[azure]"     # + azure-identity + azure-mgmt-containerinstance
+pip install "axonsdk-py[all]"       # everything
 ```
 
-> **Why `axon-py` instead of `axonsdk`?** The `axon`, `axonpy`, and `axon-sdk` names on PyPI are held by unrelated projects, and `axonsdk` is blocked by PyPI's name-similarity rule. `axon-py` mirrors the `axon-ts` repo naming convention (`-py` for Python, `-ts` for TypeScript) while the import path stays `import axon` unchanged.
+> **Why `axonsdk-py` instead of `axonsdk`?** The `axon`, `axonpy`, and `axon-sdk` names on PyPI are held by unrelated projects, and `axonsdk` is blocked by PyPI's name-similarity rule. `axonsdk-py` mirrors the `axon-ts` repo naming convention (`-py` for Python, `-ts` for TypeScript) while the import path stays `import axon` unchanged.
 
 ---
 
@@ -202,7 +202,7 @@ response = client.chat.completions.create(
 ### AWS
 
 ```bash
-pip install axon[aws]
+pip install axonsdk-py[aws]
 ```
 
 Set env vars (or use IAM role / `~/.aws/credentials`):
@@ -216,7 +216,7 @@ export AWS_DEFAULT_REGION=us-east-1
 ### GCP
 
 ```bash
-pip install axon[gcp]
+pip install axonsdk-py[gcp]
 ```
 
 ```bash
@@ -228,7 +228,7 @@ export GCP_REGION=us-central1
 ### Azure
 
 ```bash
-pip install axon[azure]
+pip install axonsdk-py[azure]
 ```
 
 ```bash

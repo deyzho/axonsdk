@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "axon-py"
-version = "0.1.9"
+name = "axonsdk-py"
+version = "0.1.10"
 description = "Provider-agnostic edge compute SDK for AI workload routing"
 readme = "README.md"
 license = { text = "Apache-2.0" }

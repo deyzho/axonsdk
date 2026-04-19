@@ -69,7 +69,7 @@ class GCPProvider(IAxonProvider):
         except ImportError as exc:
             raise ProviderError(
                 "gcp",
-                "google-auth is required. Install with: pip install axon[gcp]",
+                "google-auth is required. Install with: pip install axonsdk-py[gcp]",
             ) from exc
 
         self._project = os.environ.get("GCP_PROJECT_ID", "")
@@ -121,7 +121,7 @@ class GCPProvider(IAxonProvider):
             import google.auth.transport.requests
             import httpx
         except ImportError as exc:
-            raise ProviderError("gcp", "Install with: pip install axon[gcp]") from exc
+            raise ProviderError("gcp", "Install with: pip install axonsdk-py[gcp]") from exc
 
         service_name = _sanitise_name(config.name)
         image = config.metadata.get(
