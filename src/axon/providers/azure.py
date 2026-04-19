@@ -143,7 +143,8 @@ class AzureProvider(IAxonProvider):
         except ImportError as exc:
             raise ProviderError(
                 "azure",
-                "azure-mgmt-containerinstance required. Install with: pip install axonsdk-py[azure]",
+                "azure-mgmt-containerinstance required. "
+                "Install with: pip install axonsdk-py[azure]",
             ) from exc
 
         container_name = _sanitise_name(config.name)
