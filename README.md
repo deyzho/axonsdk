@@ -52,6 +52,14 @@ pip install "axonsdk-py[azure]"     # + azure-identity + azure-mgmt-containerins
 pip install "axonsdk-py[all]"       # everything
 ```
 
+> **Note:** Install as `axonsdk-py`, import as `axon`.
+>
+> ```python
+> from axon import AxonClient, AxonRouter
+> ```
+>
+> (The PyPI distribution name differs from the import name — same pattern as `beautifulsoup4` → `from bs4 import`.)
+
 > **Why `axonsdk-py` instead of `axonsdk`?** The `axon`, `axonpy`, and `axon-sdk` names on PyPI are held by unrelated projects, and `axonsdk` is blocked by PyPI's name-similarity rule. `axonsdk-py` mirrors the `axon-ts` repo naming convention (`-py` for Python, `-ts` for TypeScript) while the import path stays `import axon` unchanged.
 
 ---
