@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Axon — Route AI workloads to any edge. Python-first.</title>
-  <meta name="description" content="The Python SDK for edge AI workload routing. Deploy inference to GPU clusters, TEE nodes, and major cloud providers — automatically routed to the fastest, cheapest option. One interface. Zero lock-in." />
-  <meta property="og:title" content="Axon Python SDK — Route AI to the edge" />
-  <meta property="og:description" content="pip install axon and your AI workloads route across io.net, Akash, AWS, Cloudflare and more. OpenAI-compatible. Async-native. Provider-agnostic." />
-  <meta property="og:url" content="https://axon.dev" />
+  <title>AxonSDK — Universal AI compute routing. Any provider, any language.</title>
+  <meta name="description" content="AxonSDK is the universal AI compute routing SDK. Deploy inference across GPU clusters, TEE nodes, and major clouds from one interface — available for TypeScript and Python. One API. Zero lock-in." />
+  <meta property="og:title" content="AxonSDK — Universal AI compute routing" />
+  <meta property="og:description" content="Route AI inference to io.net, Akash, Acurast, Fluence, Koii, AWS, GCP, Azure, Cloudflare, and Fly.io — from TypeScript or Python, with the same SDK shape." />
+  <meta property="og:url" content="https://axonsdk.dev" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
@@ -20,11 +20,15 @@
     :root {
       --bg:        #0a0a0f;
       --surface:   #111118;
+      --surface-2: #161621;
       --border:    #1e1e2e;
       --accent:    #f97316;
       --accent2:   #fb923c;
+      --accent-py: #facc15;
+      --accent-ts: #60a5fa;
       --text:      #e2e8f0;
       --muted:     #64748b;
+      --muted-2:   #94a3b8;
       --code-bg:   #0d0d16;
       --radius:    10px;
       --max:       1100px;
@@ -56,30 +60,25 @@
     }
     .nav-logo {
       display: flex; align-items: center; gap: 0.5rem;
-      font-weight: 700; font-size: 1.1rem; color: var(--text);
+      font-weight: 800; font-size: 1.1rem; color: var(--text);
+      letter-spacing: -0.01em;
     }
-    .nav-logo span { color: var(--accent); }
-    .nav-logo .py-badge {
-      font-size: 0.65rem; font-weight: 700; letter-spacing: .04em;
-      background: rgba(249,115,22,.12); color: var(--accent);
-      border: 1px solid rgba(249,115,22,.25); border-radius: 4px;
-      padding: 0.1rem 0.4rem; margin-left: 0.25rem;
-    }
-    .nav-links { display: flex; gap: 1.75rem; font-size: 0.9rem; }
+    .nav-logo .bolt { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.75rem; font-size: 0.9rem; align-items: center; }
     .nav-links a { color: var(--muted); transition: color .2s; }
     .nav-links a:hover { color: var(--text); }
     .nav-cta {
-      background: var(--accent); color: #000; font-weight: 600;
+      background: var(--accent); color: #000 !important; font-weight: 700;
       padding: 0.4rem 1.1rem; border-radius: 6px; font-size: 0.875rem;
       transition: background .2s;
     }
-    .nav-cta:hover { background: var(--accent2); color: #000; }
-    @media (max-width: 600px) { .nav-links { display: none; } }
+    .nav-cta:hover { background: var(--accent2); color: #000 !important; }
+    @media (max-width: 700px) { .nav-links a:not(.nav-cta) { display: none; } }
 
     /* ── Hero ───────────────────────────────────────────────── */
     .hero {
       max-width: var(--max); margin: 0 auto;
-      padding: 7rem 2rem 5rem;
+      padding: 6rem 2rem 4rem;
       text-align: center;
     }
     .badge {
@@ -91,918 +90,476 @@
       letter-spacing: .03em;
     }
     .hero h1 {
-      font-size: clamp(2.2rem, 6vw, 4rem);
-      font-weight: 800; line-height: 1.1;
-      letter-spacing: -0.03em;
+      font-size: clamp(2.4rem, 6.5vw, 4.2rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -0.035em;
       margin-bottom: 1.25rem;
     }
     .hero h1 em {
       font-style: normal;
-      background: linear-gradient(90deg, var(--accent), #facc15);
+      background: linear-gradient(90deg, var(--accent), var(--accent-py));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .hero p {
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      color: var(--muted); max-width: 560px; margin: 0 auto 2.5rem;
+    .hero-sub {
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      color: var(--muted-2); max-width: 620px; margin: 0 auto 2.75rem;
     }
     .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .btn-primary {
-      background: var(--accent); color: #000; font-weight: 700;
-      padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 1rem;
+      background: var(--accent); color: #000 !important; font-weight: 700;
+      padding: 0.8rem 1.75rem; border-radius: 8px; font-size: 1rem;
       transition: background .2s, transform .1s;
     }
-    .btn-primary:hover { background: var(--accent2); color: #000; transform: translateY(-1px); }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
     .btn-secondary {
-      background: var(--surface); color: var(--text); font-weight: 600;
-      padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 1rem;
+      background: var(--surface); color: var(--text) !important; font-weight: 600;
+      padding: 0.8rem 1.75rem; border-radius: 8px; font-size: 1rem;
       border: 1px solid var(--border); transition: border-color .2s, transform .1s;
     }
     .btn-secondary:hover { border-color: var(--accent); transform: translateY(-1px); }
 
-    /* ── Install strip ──────────────────────────────────────── */
-    .install-strip {
-      max-width: 480px; margin: 3rem auto 0;
-      background: var(--code-bg); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 0.75rem 1.25rem;
+    /* ── Dual language picker ──────────────────────────────── */
+    .lang-picker {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 2rem 2rem 5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+    .lang-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: border-color .2s, transform .15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .lang-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--lang-accent, var(--accent));
+      opacity: 0.7;
+    }
+    .lang-card:hover { border-color: var(--lang-accent, var(--accent)); transform: translateY(-2px); }
+    .lang-card.ts  { --lang-accent: var(--accent-ts); }
+    .lang-card.py  { --lang-accent: var(--accent-py); }
+    .lang-card-head {
       display: flex; align-items: center; gap: 0.75rem;
-      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; font-size: 0.9rem;
     }
-    .install-strip .prompt { color: var(--accent); user-select: none; }
-    .install-strip code { color: var(--text); flex: 1; }
-    .copy-btn {
-      background: none; border: 1px solid var(--border); color: var(--muted);
-      border-radius: 5px; padding: 0.2rem 0.6rem; font-size: 0.75rem;
-      cursor: pointer; transition: border-color .2s, color .2s;
+    .lang-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.9rem;
+      background: var(--surface-2);
+      color: var(--lang-accent);
+      border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
     }
-    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .lang-title {
+      font-size: 1.25rem; font-weight: 800; letter-spacing: -0.01em;
+    }
+    .lang-sub {
+      color: var(--muted-2); font-size: 0.95rem; margin-bottom: 0.25rem;
+    }
+    .lang-install {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.65rem 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--text);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .lang-install .prompt { color: var(--lang-accent); user-select: none; }
+    .lang-link {
+      margin-top: auto;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.92rem; font-weight: 600;
+      color: var(--lang-accent) !important;
+    }
+    .lang-link:hover { filter: brightness(1.15); }
+    .lang-meta {
+      display: flex; gap: 1rem; font-size: 0.8rem; color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .lang-meta span { display: inline-flex; align-items: center; gap: 0.35rem; }
 
     /* ── Section shared ─────────────────────────────────────── */
     section { padding: 5rem 2rem; }
     .section-inner { max-width: var(--max); margin: 0 auto; }
+    .section-inner.center { text-align: center; }
     .section-label {
-      font-size: 0.75rem; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;
     }
     .section-title {
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem;
+      font-size: clamp(1.7rem, 4.2vw, 2.6rem);
+      font-weight: 800; letter-spacing: -0.025em; margin-bottom: 1rem; line-height: 1.1;
     }
-    .section-sub { color: var(--muted); max-width: 540px; margin-bottom: 3rem; font-size: 1.05rem; }
+    .section-sub { color: var(--muted-2); max-width: 560px; margin-bottom: 3rem; font-size: 1.05rem; }
+    .section-inner.center .section-sub { margin-left: auto; margin-right: auto; }
 
-    /* ── Providers ──────────────────────────────────────────── */
-    .providers { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .provider-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
-    .provider-card {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.75rem;
-      transition: border-color .2s;
+    /* ── Pitch / feature grid ──────────────────────────────── */
+    .pitch { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .pitch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
     }
-    .provider-card:hover { border-color: var(--accent); }
-    .provider-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
-    .provider-name { font-weight: 700; font-size: 1.05rem; }
-    .provider-badge {
-      font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem;
-      border-radius: 100px; background: rgba(249,115,22,.15); color: var(--accent);
+    .pitch-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
     }
-    .provider-desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
-    .provider-meta { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--muted); flex-wrap: wrap; }
-    .provider-meta span { display: flex; align-items: center; gap: 0.35rem; }
+    .pitch-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(249,115,22,.10); color: var(--accent);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; margin-bottom: 0.9rem;
+      border: 1px solid rgba(249,115,22,.2);
+    }
+    .pitch-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.4rem; }
+    .pitch-desc { color: var(--muted-2); font-size: 0.92rem; line-height: 1.55; }
 
-    /* ── Code blocks ────────────────────────────────────────── */
+    /* ── Code comparison ───────────────────────────────────── */
+    .compare { }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
     .code-block {
-      background: var(--code-bg); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
     }
+    .code-block.ts-block { border-top: 3px solid var(--accent-ts); }
+    .code-block.py-block { border-top: 3px solid var(--accent-py); }
     .code-header {
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 0.6rem 1rem; font-size: 0.8rem; color: var(--muted);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      font-size: 0.8rem; color: var(--muted-2);
       display: flex; align-items: center; gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
     }
-    .code-dots { display: flex; gap: 5px; }
+    .code-dots { display: flex; gap: 5px; margin-right: 0.4rem; }
     .code-dots span { width: 10px; height: 10px; border-radius: 50%; }
     .dot-red { background: #ff5f57; }
     .dot-yellow { background: #ffbd2e; }
     .dot-green { background: #28ca41; }
     .code-block pre {
-      padding: 1.25rem; font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.82rem; line-height: 1.75; overflow-x: auto;
+      padding: 1.25rem;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem; line-height: 1.75;
+      overflow-x: auto;
       color: #c9d1d9;
     }
     .kw  { color: #ff79c6; }
     .fn  { color: #50fa7b; }
     .str { color: #f1fa8c; }
-    .cm  { color: #6272a4; }
+    .cm  { color: #6272a4; font-style: italic; }
     .obj { color: #8be9fd; }
     .num { color: #bd93f9; }
-    .dec { color: #ff79c6; }
 
-    /* ── Demo ───────────────────────────────────────────────── */
-    .demo { background: var(--bg); }
-    .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
-    @media (max-width: 860px) { .demo-grid { grid-template-columns: 1fr; } }
-    .demo-steps { display: flex; flex-direction: column; gap: 1.5rem; }
-    .step { display: flex; gap: 1rem; }
-    .step-num {
-      flex-shrink: 0; width: 28px; height: 28px;
-      background: rgba(249,115,22,.15); color: var(--accent);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; font-weight: 700;
+    /* ── Providers ──────────────────────────────────────────── */
+    .providers { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .provider-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+      margin-top: 2rem;
     }
-    .step-content h4 { font-weight: 600; margin-bottom: 0.25rem; }
-    .step-content p { color: var(--muted); font-size: 0.9rem; }
-
-    /* ── Router section ─────────────────────────────────────── */
-    .router-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .router-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
-    @media (max-width: 860px) { .router-grid { grid-template-columns: 1fr; } }
-    .strategy-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
-    .strategy-list li { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.925rem; }
-    .strategy-list li .tag {
-      background: rgba(249,115,22,.12); color: var(--accent);
-      border: 1px solid rgba(249,115,22,.25);
-      border-radius: 4px; font-size: 0.75rem; font-weight: 700;
-      padding: 0.1rem 0.5rem; flex-shrink: 0;
-      font-family: 'JetBrains Mono','SF Mono','Fira Code',monospace;
-    }
-    .strategy-list li .desc { color: var(--muted); }
-
-    /* ── Features ───────────────────────────────────────────── */
-    .features { background: var(--bg); }
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
-    .feature-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.5rem;
+    .provider-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      display: flex; flex-direction: column; gap: 0.25rem;
       transition: border-color .2s;
     }
-    .feature-card:hover { border-color: var(--accent); }
-    .feature-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
-    .feature-card h3 { font-weight: 700; margin-bottom: 0.4rem; font-size: 1rem; }
-    .feature-card p { color: var(--muted); font-size: 0.875rem; }
+    .provider-chip:hover { border-color: var(--accent); }
+    .provider-chip .pname { font-weight: 700; font-size: 0.95rem; }
+    .provider-chip .pkind { font-size: 0.75rem; color: var(--muted); }
+    .provider-legend {
+      display: flex; gap: 1.2rem; flex-wrap: wrap;
+      color: var(--muted); font-size: 0.82rem;
+      margin-top: 1.5rem;
+    }
+    .provider-legend .dot {
+      display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+      margin-right: 0.35rem;
+      background: var(--accent);
+    }
+    .provider-legend .dot.edge  { background: #f97316; }
+    .provider-legend .dot.depin { background: #facc15; }
+    .provider-legend .dot.cloud { background: #60a5fa; }
 
-    /* ── CLI strip ──────────────────────────────────────────── */
-    .cli-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .cli-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; }
-    .cli-row {
-      background: var(--code-bg); border: 1px solid var(--border);
-      border-radius: 8px; padding: 0.9rem 1.1rem;
-      display: grid; grid-template-columns: auto 1fr;
-      gap: 0.75rem; align-items: start;
+    /* ── CTA footer ─────────────────────────────────────────── */
+    .cta {
+      text-align: center;
+      padding: 5rem 2rem;
+      background: linear-gradient(180deg, var(--bg) 0%, rgba(249,115,22,0.05) 100%);
     }
-    .cli-cmd { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem; color: var(--accent); white-space: nowrap; }
-    .cli-desc { color: var(--muted); font-size: 0.85rem; }
-
-    /* ── Status strip ───────────────────────────────────────── */
-    .status-strip {
-      background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      padding: 1.5rem 2rem;
+    .cta h2 {
+      font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+      font-weight: 800; letter-spacing: -0.025em; margin-bottom: 1rem;
     }
-    .status-strip-inner {
-      max-width: var(--max); margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
-    }
-    .status-dot-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-    .status-pill {
-      display: flex; align-items: center; gap: 0.5rem;
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 100px; padding: 0.3rem 0.85rem; font-size: 0.8rem; font-weight: 600;
-    }
-    .status-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; }
-
-    /* ── Tab bar ────────────────────────────────────────────── */
-    .tab-bar { display: flex; border-bottom: 1px solid var(--border); }
-    .tab-btn {
-      background: none; border: none; color: var(--muted);
-      padding: 0.55rem 1rem; font-size: 0.78rem; font-weight: 600;
-      cursor: pointer; border-bottom: 2px solid transparent;
-      transition: color .15s, border-color .15s;
-      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
-    }
-    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    /* ── CTA ────────────────────────────────────────────────── */
-    .cta-section {
-      background: radial-gradient(ellipse at center, rgba(249,115,22,.08) 0%, transparent 70%),
-                  var(--surface);
-      border-top: 1px solid var(--border); text-align: center; padding: 6rem 2rem;
-    }
-    .cta-section h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em; }
-    .cta-section p { color: var(--muted); font-size: 1.05rem; max-width: 480px; margin: 0 auto 2.5rem; }
+    .cta p { color: var(--muted-2); max-width: 520px; margin: 0 auto 2.25rem; font-size: 1.05rem; }
 
     /* ── Footer ─────────────────────────────────────────────── */
     footer {
-      background: var(--bg); border-top: 1px solid var(--border);
-      padding: 2rem; text-align: center;
-      color: var(--muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
     }
-    footer a { color: var(--muted); }
-    footer a:hover { color: var(--accent); }
-    .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .footer-inner {
+      max-width: var(--max); margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .footer-links a { color: var(--muted); }
+    .footer-links a:hover { color: var(--text); }
+    .footer-brand { font-weight: 700; color: var(--text); }
+    .footer-brand .bolt { color: var(--accent); }
   </style>
 </head>
 <body>
-
-<!-- ── Nav ──────────────────────────────────────────────────────────────── -->
-<nav>
-  <div class="nav-logo">⚡ <span>Axon</span><span class="py-badge">Python</span></div>
-  <div class="nav-links">
-    <a href="#quickstart">Quick start</a>
-    <a href="#providers">Providers</a>
-    <a href="#router">Router</a>
-    <a href="#cli">CLI</a>
-    <a href="#features">Features</a>
-    <a href="https://github.com/deyzho/axon" target="_blank">GitHub</a>
-  </div>
-  <a class="nav-cta" href="#quickstart">Get started →</a>
-</nav>
-
-<!-- ── Hero ─────────────────────────────────────────────────────────────── -->
-<section class="hero">
-  <div class="badge">Open Source · v0.1.0 · Python 3.11+ · 10 Providers · Async-native</div>
-  <h1>Route AI workloads<br/>to <em>any edge.</em></h1>
-  <p>Deploy inference to GPU clusters, TEE nodes, and major cloud providers — all through one async Python interface. No lock-in. No rewriting.</p>
-  <p style="font-size:0.9rem;color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Axon is to edge compute what <code style="color:var(--accent)">httpx</code> is to HTTP — one client, any backend.</p>
-  <div class="hero-ctas">
-    <a class="btn-primary" href="#quickstart">Get started →</a>
-    <a class="btn-secondary" href="https://github.com/deyzho/axon" target="_blank">View on GitHub</a>
-  </div>
-  <div class="install-strip">
-    <span class="prompt">$</span>
-    <code id="install-cmd">pip install axon</code>
-    <button class="copy-btn" onclick="copyInstall()">copy</button>
-  </div>
-  <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem;">
-    <a href="https://github.com/deyzho/axon" target="_blank">
-      <img src="https://img.shields.io/github/stars/deyzho/axon?style=flat-square&color=f97316&label=stars" alt="GitHub stars" />
+  <!-- Nav -->
+  <nav>
+    <a href="/" class="nav-logo">
+      <span class="bolt">⚡</span> AxonSDK
     </a>
-    <a href="https://pypi.org/project/axon" target="_blank">
-      <img src="https://img.shields.io/pypi/v/axon?color=f97316&style=flat-square&label=pypi" alt="PyPI" />
-    </a>
-    <a href="https://pypi.org/project/axon" target="_blank">
-      <img src="https://img.shields.io/pypi/pyversions/axon?color=f97316&style=flat-square" alt="Python versions" />
-    </a>
-    <a href="https://github.com/deyzho/axon/blob/master/LICENSE" target="_blank">
-      <img src="https://img.shields.io/github/license/deyzho/axon?color=f97316&style=flat-square" alt="License" />
-    </a>
-  </div>
-</section>
-
-<!-- ── OpenAI hook ───────────────────────────────────────────────────────── -->
-<section style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4rem 2rem;" id="quickstart">
-  <div class="section-inner">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;" class="hook-grid">
-      <div>
-        <div class="section-label">OpenAI-compatible · axon</div>
-        <h2 class="section-title" style="margin-bottom:0.75rem;">From OpenAI to the edge<br/>in two lines of Python</h2>
-        <p style="color:var(--muted);font-size:1rem;margin-bottom:1.5rem;">
-          Your existing OpenAI SDK code works unchanged. Swap the <code style="color:var(--accent)">base_url</code> and <code style="color:var(--accent)">api_key</code> — Axon routes requests automatically to the cheapest available provider across io.net, Akash, Acurast, AWS and more.
-        </p>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.75rem;">
-          <li style="display:flex;gap:0.75rem;font-size:0.9rem;color:var(--muted)"><span style="color:var(--accent);font-weight:700;">✓</span> Drop-in with the <code style="color:var(--accent);font-size:.85em">openai</code> Python package, LangChain, LlamaIndex, DSPy</li>
-          <li style="display:flex;gap:0.75rem;font-size:0.9rem;color:var(--muted)"><span style="color:var(--accent);font-weight:700;">✓</span> Async-native with <code style="color:var(--accent);font-size:.85em">httpx</code> — compatible with FastAPI, Django Async, Starlette</li>
-          <li style="display:flex;gap:0.75rem;font-size:0.9rem;color:var(--muted)"><span style="color:var(--accent);font-weight:700;">✓</span> Automatic failover, latency &amp; cost routing, circuit-breaker protection</li>
-          <li style="display:flex;gap:0.75rem;font-size:0.9rem;color:var(--muted)"><span style="color:var(--accent);font-weight:700;">✓</span> Pydantic v2 models throughout — fully typed, IDE-friendly</li>
-          <li style="display:flex;gap:0.75rem;font-size:0.9rem;color:var(--muted)"><span style="color:var(--accent);font-weight:700;">✓</span> ~$0.40/hr A100 spot vs. $0.06/1K tokens on GPT-4</li>
-        </ul>
-        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-          <a class="btn-primary" href="#router" style="font-size:0.9rem;padding:0.6rem 1.4rem;">See the router →</a>
-          <a class="btn-secondary" href="https://github.com/deyzho/axon" target="_blank" style="font-size:0.9rem;padding:0.6rem 1.4rem;">GitHub →</a>
-        </div>
-      </div>
-      <div>
-        <div class="code-block">
-          <div class="code-header">
-            <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
-            <div class="tab-bar" style="border:none;margin:0;flex:1;margin-left:0.5rem;">
-              <button class="tab-btn active" onclick="hookTab('deploy')">deploy.py</button>
-              <button class="tab-btn" onclick="hookTab('openai')">openai_swap.py</button>
-            </div>
-          </div>
-          <div id="hook-deploy" class="tab-panel active">
-<pre><span class="kw">import</span> asyncio
-<span class="kw">from</span> <span class="obj">axon</span> <span class="kw">import</span> <span class="obj">AxonClient</span>
-<span class="kw">from</span> <span class="obj">axon.types</span> <span class="kw">import</span> <span class="obj">DeploymentConfig</span>
-
-<span class="kw">async def</span> <span class="fn">main</span>():
-    <span class="kw">async with</span> <span class="obj">AxonClient</span>(
-        provider=<span class="str">"ionet"</span>,
-        secret_key=<span class="str">"your-key"</span>
-    ) <span class="kw">as</span> client:
-
-        <span class="cm"># Deploy AI workload to edge GPU</span>
-        deployment = <span class="kw">await</span> client.<span class="fn">deploy</span>(
-            <span class="obj">DeploymentConfig</span>(
-                name=<span class="str">"my-inference-worker"</span>,
-                entry_point=<span class="str">"worker.py"</span>,
-                memory_mb=<span class="num">4096</span>,
-                replicas=<span class="num">2</span>,
-            )
-        )
-
-        <span class="cm"># Stream results from the worker</span>
-        client.<span class="fn">on_message</span>(<span class="kw">lambda</span> msg:
-            <span class="fn">print</span>(<span class="str">f"Result: </span>{msg.payload}<span class="str">"</span>)
-        )
-
-        <span class="kw">await</span> client.<span class="fn">send</span>(
-            deployment.id,
-            {<span class="str">"prompt"</span>: <span class="str">"Summarise this article..."</span>}
-        )
-
-asyncio.<span class="fn">run</span>(<span class="fn">main</span>())</pre>
-          </div>
-          <div id="hook-openai" class="tab-panel">
-<pre><span class="kw">from</span> <span class="obj">openai</span> <span class="kw">import</span> <span class="obj">AsyncOpenAI</span>
-<span class="kw">import</span> os
-
-<span class="cm"># ── Before: OpenAI ──────────────────────────</span>
-client = <span class="obj">AsyncOpenAI</span>(
-    api_key=os.<span class="fn">getenv</span>(<span class="str">"OPENAI_API_KEY"</span>)
-)
-
-<span class="cm"># ── After: Axon edge routing ─────────────────</span>
-<span class="cm"># Change just these two lines — nothing else</span>
-client = <span class="obj">AsyncOpenAI</span>(
-    base_url=<span class="str">"http://localhost:8787/v1"</span>,
-    api_key=os.<span class="fn">getenv</span>(<span class="str">"AXON_SECRET_KEY"</span>)
-)
-
-<span class="cm"># Your existing code works unchanged ↓</span>
-response = <span class="kw">await</span> client.chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"llama-3-8b"</span>,
-    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello!"</span>}],
-    stream=<span class="kw">True</span>,
-)
-<span class="kw">async for</span> chunk <span class="kw">in</span> response:
-    <span class="fn">print</span>(chunk.choices[<span class="num">0</span>].delta.content, end=<span class="str">""</span>)</pre>
-          </div>
-        </div>
-      </div>
+    <div class="nav-links">
+      <a href="https://ts.axonsdk.dev">TypeScript</a>
+      <a href="https://py.axonsdk.dev">Python</a>
+      <a href="https://github.com/deyzho" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://status.axonsdk.dev">Status</a>
+      <a class="nav-cta" href="#get-started">Get started</a>
     </div>
-  </div>
-</section>
-<style>
-  @media (max-width: 860px) { .hook-grid { grid-template-columns: 1fr !important; } }
-</style>
+  </nav>
 
-<!-- ── Status strip ──────────────────────────────────────────────────────── -->
-<div class="status-strip">
-  <div class="status-strip-inner">
-    <div>
-      <p style="font-size:0.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:0.3rem;">Live provider health</p>
-      <p style="color:var(--muted);font-size:0.875rem;">All 10 providers operational — updated every 5 minutes.</p>
-    </div>
-    <div>
-      <div class="status-dot-row" style="margin-bottom:0.5rem;">
-        <div class="status-pill"><span class="dot"></span>io.net</div>
-        <div class="status-pill"><span class="dot"></span>Akash</div>
-        <div class="status-pill"><span class="dot"></span>Acurast</div>
-        <div class="status-pill"><span class="dot"></span>Fluence</div>
-        <div class="status-pill"><span class="dot"></span>Koii</div>
-      </div>
-      <div class="status-dot-row">
-        <div class="status-pill"><span class="dot"></span>AWS</div>
-        <div class="status-pill"><span class="dot"></span>GCP</div>
-        <div class="status-pill"><span class="dot"></span>Azure</div>
-        <div class="status-pill"><span class="dot"></span>Cloudflare</div>
-        <div class="status-pill"><span class="dot"></span>Fly.io</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ── Providers ─────────────────────────────────────────────────────────── -->
-<section class="providers" id="providers">
-  <div class="section-inner">
-    <div class="section-label">Providers</div>
-    <h2 class="section-title">One interface, any network</h2>
-    <p class="section-sub">Deploy to GPU clusters or major cloud platforms without changing your code. Axon routes to the fastest, cheapest available option.</p>
-
-    <p style="font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:1rem;">Edge &amp; Private compute</p>
-    <div class="provider-grid" style="margin-bottom:2.75rem;">
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">io.net</div>
-          <div class="provider-badge">GPU · Live</div>
-        </div>
-        <div class="provider-desc">GPU clusters — A100, H100, RTX 4090 spot compute at a fraction of cloud pricing. Best for large model inference and training jobs.</div>
-        <div class="provider-meta">
-          <span>🖥️ GPU clusters</span>
-          <span>🔑 API key</span>
-          <span>⚡ ~$0.40/hr A100</span>
-        </div>
-      </div>
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">Akash</div>
-          <div class="provider-badge">Live</div>
-        </div>
-        <div class="provider-desc">Open cloud marketplace where providers bid to run containerised workloads. Pay per use with no lock-in and no vendor overhead.</div>
-        <div class="provider-meta">
-          <span>☁️ Docker containers</span>
-          <span>🔑 BIP-39 mnemonic</span>
-          <span>⚡ nodejs / docker</span>
-        </div>
-      </div>
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">Acurast</div>
-          <div class="provider-badge">TEE · Live</div>
-        </div>
-        <div class="provider-desc">237,000+ smartphone nodes running inside hardware Trusted Execution Environments. Your code and data remain private — even from device owners.</div>
-        <div class="provider-meta">
-          <span>📱 TEE-based</span>
-          <span>🔑 P256 auth</span>
-          <span>⚡ nodejs / wasm</span>
-        </div>
-      </div>
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">Fluence</div>
-          <div class="provider-badge">Live</div>
-        </div>
-        <div class="provider-desc">Serverless compute built on a peer-to-peer network. Deploy functions globally with no cold starts and no central point of failure.</div>
-        <div class="provider-meta">
-          <span>🌐 P2P relay</span>
-          <span>🔑 Ed25519 key</span>
-          <span>⚡ nodejs</span>
-        </div>
-      </div>
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">Koii</div>
-          <div class="provider-badge">Live</div>
-        </div>
-        <div class="provider-desc">Community-owned compute with Solana-compatible task nodes. Ideal for recurring data tasks, oracles, and persistent agent workloads.</div>
-        <div class="provider-meta">
-          <span>🔗 Task nodes</span>
-          <span>🔑 Solana keypair</span>
-          <span>⚡ nodejs</span>
-        </div>
-      </div>
-    </div>
-
-    <p style="font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:1rem;">Cloud Providers <span style="font-size:.75rem;background:rgba(34,197,94,.1);color:#22c55e;padding:.15rem .5rem;border-radius:4px;margin-left:.5rem;">Live</span></p>
-    <div class="provider-grid">
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">AWS</div>
-          <div class="provider-badge" style="background:rgba(255,153,0,.12);color:#ff9900;">Lambda · Fargate</div>
-        </div>
-        <div class="provider-desc">Lambda zip deployments with automatic Function URLs, or ECS Fargate for containerised workloads. Uses boto3 — no extra config boilerplate.</div>
-        <div class="provider-meta">
-          <span>⚡ Lambda · Fargate</span>
-          <span>🔑 IAM credentials</span>
-          <span>🐍 pip install axonsdk-py[aws]</span>
-        </div>
-      </div>
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">Google Cloud</div>
-          <div class="provider-badge" style="background:rgba(66,133,244,.12);color:#4285f4;">Cloud Run · Functions</div>
-        </div>
-        <div class="provider-desc">Cloud Run v2 containers or 2nd-gen Cloud Functions via GCS source upload. ADC support — works with service accounts, Workload Identity, and Cloud Shell.</div>
-        <div class="provider-meta">
-          <span>⚡ Cloud Run · Functions</span>
-          <span>🔑 Service account / ADC</span>
-          <span>🐍 pip install axonsdk-py[gcp]</span>
-        </div>
-      </div>
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">Azure</div>
-          <div class="provider-badge" style="background:rgba(0,120,212,.12);color:#0078d4;">ACI · Functions</div>
-        </div>
-        <div class="provider-desc">Container Instances or Azure Functions v2 via Kudu zip deploy. Managed identity, service principal, and DefaultAzureCredential all supported.</div>
-        <div class="provider-meta">
-          <span>⚡ ACI · Functions</span>
-          <span>🔑 Service principal / MI</span>
-          <span>🐍 pip install axonsdk-py[azure]</span>
-        </div>
-      </div>
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">Cloudflare Workers</div>
-          <div class="provider-badge" style="background:rgba(249,115,22,.12);color:var(--accent);">Edge · 300+ PoPs</div>
-        </div>
-        <div class="provider-desc">Deploy Workers scripts to 300+ edge locations worldwide via the Workers REST API. Sub-millisecond cold starts, global by default. No extra dependencies.</div>
-        <div class="provider-meta">
-          <span>⚡ Workers</span>
-          <span>🔑 CF API token</span>
-          <span>🐍 pip install axon</span>
-        </div>
-      </div>
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-name">Fly.io</div>
-          <div class="provider-badge" style="background:rgba(124,77,255,.12);color:#7c4dff;">Machines</div>
-        </div>
-        <div class="provider-desc">Fly Machines — fast-booting Docker containers placed close to your users. Deploy replicas globally with the Machines REST API. No extra dependencies.</div>
-        <div class="provider-meta">
-          <span>⚡ Fly Machines</span>
-          <span>🔑 flyctl auth token</span>
-          <span>🐍 pip install axon</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Quick start ───────────────────────────────────────────────────────── -->
-<section class="demo" id="demo">
-  <div class="section-inner">
-    <div class="section-label">Quick start</div>
-    <h2 class="section-title">Up and running in minutes</h2>
-    <p class="section-sub">One pip install, one config, one async client — regardless of which provider you deploy to.</p>
-    <div class="demo-grid">
-      <div class="demo-steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h4>Install Axon</h4>
-            <p>Core install covers all edge &amp; cloud providers that use only <code style="color:var(--accent);font-size:.85em">httpx</code>. Add optional extras for AWS, GCP, or Azure SDKs.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h4>Set your credentials</h4>
-            <p>Copy <code style="color:var(--accent);font-size:.85em">.env.example</code> to <code style="color:var(--accent);font-size:.85em">.env</code> and fill in your provider key. Run <code style="color:var(--accent);font-size:.85em">axon auth</code> to validate them.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h4>Deploy your workload</h4>
-            <p>Point Axon at your Python or Node.js entry point. It handles bundling, upload, and registration automatically.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-content">
-            <h4>Route with the AxonRouter</h4>
-            <p>Add multiple providers and let the router pick the fastest or cheapest automatically — with circuit-breaker failover built in.</p>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="code-block">
-          <div class="code-header">
-            <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
-            <div class="tab-bar" style="border:none;margin:0;flex:1;margin-left:0.5rem;">
-              <button class="tab-btn active" onclick="qsTab('install')">Terminal</button>
-              <button class="tab-btn" onclick="qsTab('router')">router.py</button>
-            </div>
-          </div>
-          <div id="qs-install" class="tab-panel active">
-<pre style="padding:1.1rem 1.25rem;font-family:'JetBrains Mono','SF Mono','Fira Code',monospace;font-size:0.82rem;line-height:1.9;"><span style="color:var(--accent)">$</span> pip install axon
-
-<span class="cm"># Optional cloud SDK extras</span>
-<span style="color:var(--accent)">$</span> pip install <span class="str">"axon[aws]"</span>
-<span style="color:var(--accent)">$</span> pip install <span class="str">"axon[gcp]"</span>
-<span style="color:var(--accent)">$</span> pip install <span class="str">"axon[azure]"</span>
-
-<span class="cm"># Or everything at once</span>
-<span style="color:var(--accent)">$</span> pip install <span class="str">"axon[all]"</span>
-
-<span class="cm"># Initialise a new project</span>
-<span style="color:var(--accent)">$</span> axon init my-worker
-
-<span class="cm"># Validate credentials</span>
-<span style="color:var(--accent)">$</span> axon auth
-
-<span class="cm"># Deploy to ionet</span>
-<span style="color:var(--accent)">$</span> axon deploy --provider ionet
-
-<span class="cm"># Check deployment status</span>
-<span style="color:var(--accent)">$</span> axon status</pre>
-          </div>
-          <div id="qs-router" class="tab-panel">
-<pre><span class="kw">import</span> asyncio
-<span class="kw">from</span> <span class="obj">axon.router</span> <span class="kw">import</span> <span class="obj">AxonRouter</span>
-<span class="kw">from</span> <span class="obj">axon.types</span> <span class="kw">import</span> <span class="obj">DeploymentConfig</span>, <span class="obj">RoutingStrategy</span>
-
-<span class="kw">async def</span> <span class="fn">main</span>():
-    router = <span class="obj">AxonRouter</span>(
-        providers=[<span class="str">"ionet"</span>, <span class="str">"akash"</span>, <span class="str">"aws"</span>],
-        secret_key=<span class="str">"your-axon-key"</span>,
-        strategy=<span class="obj">RoutingStrategy</span>.<span class="obj">LATENCY</span>,
-    )
-
-    <span class="kw">async with</span> router:
-        <span class="cm"># Connects all providers concurrently,</span>
-        <span class="cm"># tolerates individual failures</span>
-        estimates = <span class="kw">await</span> router.<span class="fn">estimate_all</span>(config)
-        <span class="kw">for</span> e <span class="kw">in</span> sorted(estimates,
-                        key=<span class="kw">lambda</span> e: e.usd_estimate):
-            <span class="fn">print</span>(<span class="str">f"{e.provider}: ${e.usd_estimate:.4f}/hr"</span>)
-
-        <span class="cm"># Deploy — router picks the best provider</span>
-        deployment = <span class="kw">await</span> router.<span class="fn">deploy</span>(
-            <span class="obj">DeploymentConfig</span>(
-                name=<span class="str">"inference-worker"</span>,
-                entry_point=<span class="str">"worker.py"</span>,
-                memory_mb=<span class="num">2048</span>,
-            )
-        )
-        <span class="fn">print</span>(<span class="str">f"Deployed on {deployment.provider}"</span>)
-
-asyncio.<span class="fn">run</span>(<span class="fn">main</span>())</pre>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Router ────────────────────────────────────────────────────────────── -->
-<section class="router-section" id="router">
-  <div class="section-inner">
-    <div class="section-label">AxonRouter</div>
-    <h2 class="section-title">Intelligent multi-provider routing</h2>
-    <p class="section-sub">The <code style="color:var(--accent)">AxonRouter</code> connects to every provider concurrently, runs a background health loop, and routes deployments based on your chosen strategy — with automatic circuit-breaker failover.</p>
-    <div class="router-grid">
-      <div>
-        <ul class="strategy-list">
-          <li>
-            <span class="tag">LATENCY</span>
-            <span class="desc">Routes to the provider with the lowest measured response time. Re-ranks after every health check.</span>
-          </li>
-          <li>
-            <span class="tag">COST</span>
-            <span class="desc">Always picks the cheapest available provider based on live <code style="color:var(--accent);font-size:.85em">estimate()</code> calls before each deployment.</span>
-          </li>
-          <li>
-            <span class="tag">ROUND_ROBIN</span>
-            <span class="desc">Distributes workloads evenly across all healthy providers for balanced resource usage.</span>
-          </li>
-          <li>
-            <span class="tag">FAILOVER</span>
-            <span class="desc">Primary provider first, automatic fallback down a ranked list if the primary is unavailable.</span>
-          </li>
-        </ul>
-        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
-          <p style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:0.75rem;">Circuit breaker states</p>
-          <div style="display:flex;flex-direction:column;gap:0.6rem;">
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;">
-              <span style="width:10px;height:10px;border-radius:50%;background:#22c55e;flex-shrink:0;"></span>
-              <strong style="color:var(--text);min-width:100px;">CLOSED</strong>
-              <span style="color:var(--muted);">Normal operation — requests pass through</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;">
-              <span style="width:10px;height:10px;border-radius:50%;background:#ef4444;flex-shrink:0;"></span>
-              <strong style="color:var(--text);min-width:100px;">OPEN</strong>
-              <span style="color:var(--muted);">Provider skipped after 5 consecutive failures</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;">
-              <span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></span>
-              <strong style="color:var(--text);min-width:100px;">HALF-OPEN</strong>
-              <span style="color:var(--muted);">Probe request sent after 60s recovery timeout</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="code-block">
-          <div class="code-header">
-            <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
-            <span style="margin-left:0.5rem;font-size:0.75rem;color:var(--muted);">circuit_breaker.py</span>
-          </div>
-<pre><span class="kw">from</span> <span class="obj">axon.router</span> <span class="kw">import</span> <span class="obj">AxonRouter</span>, <span class="obj">CircuitBreaker</span>
-<span class="kw">from</span> <span class="obj">axon.types</span> <span class="kw">import</span> <span class="obj">RoutingStrategy</span>
-
-<span class="cm"># Custom circuit breaker — lower threshold for critical workloads</span>
-router = <span class="obj">AxonRouter</span>(
-    providers=[<span class="str">"ionet"</span>, <span class="str">"akash"</span>, <span class="str">"aws"</span>, <span class="str">"fly"</span>],
-    secret_key=<span class="str">"your-key"</span>,
-    strategy=<span class="obj">RoutingStrategy</span>.<span class="obj">FAILOVER</span>,
-    health_check_interval=<span class="num">30.0</span>,
-)
-
-<span class="kw">async with</span> router:
-    <span class="cm"># Inspect circuit state per provider</span>
-    <span class="kw">for</span> name, slot <span class="kw">in</span> router._slots.<span class="fn">items</span>():
-        cb = slot.circuit
-        <span class="fn">print</span>(<span class="str">f"{name}: {cb.state.value} "</span>
-              <span class="str">f"(failures: {cb.failure_count})"</span>)
-
-    <span class="cm"># estimate_all() fetches cost from every live provider</span>
-    estimates = <span class="kw">await</span> router.<span class="fn">estimate_all</span>(config)
-
-    <span class="cm"># Router auto-skips OPEN circuits</span>
-    deployment = <span class="kw">await</span> router.<span class="fn">deploy</span>(config)
-
-    <span class="cm"># health() returns ProviderHealth with latency_ms</span>
-    health = <span class="kw">await</span> router.<span class="fn">health</span>()
-    <span class="kw">for</span> h <span class="kw">in</span> health:
-        <span class="fn">print</span>(<span class="str">f"{h.provider}: {h.latency_ms:.0f}ms"</span>)</pre>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── CLI ───────────────────────────────────────────────────────────────── -->
-<section class="cli-section" id="cli">
-  <div class="section-inner">
-    <div class="section-label">CLI</div>
-    <h2 class="section-title">Every operation from the terminal</h2>
-    <p class="section-sub">Built with Typer and Rich — coloured output, spinners, and interactive prompts out of the box. Install the extras for the full interactive experience.</p>
-    <div class="cli-grid">
-      <div class="cli-row">
-        <span class="cli-cmd">axon init &lt;name&gt;</span>
-        <span class="cli-desc">Scaffold a new project — generates <code style="color:var(--accent);font-size:.85em">axon.json</code>, <code style="color:var(--accent);font-size:.85em">.env.example</code>, and entry point</span>
-      </div>
-      <div class="cli-row">
-        <span class="cli-cmd">axon auth</span>
-        <span class="cli-desc">Validate credentials for all configured providers and report health status</span>
-      </div>
-      <div class="cli-row">
-        <span class="cli-cmd">axon deploy</span>
-        <span class="cli-desc">Bundle, upload, and register your workload. Supports <code style="color:var(--accent);font-size:.85em">--provider</code> and <code style="color:var(--accent);font-size:.85em">--config</code> flags</span>
-      </div>
-      <div class="cli-row">
-        <span class="cli-cmd">axon status</span>
-        <span class="cli-desc">List all active deployments and their live health across every configured provider</span>
-      </div>
-      <div class="cli-row">
-        <span class="cli-cmd">axon send &lt;id&gt;</span>
-        <span class="cli-desc">Send a JSON payload to a running processor and print the response inline</span>
-      </div>
-      <div class="cli-row">
-        <span class="cli-cmd">axon --help</span>
-        <span class="cli-desc">Full command reference with examples, generated automatically from source</span>
-      </div>
-    </div>
-    <div style="margin-top:1.5rem;">
-      <div class="install-strip" style="max-width:380px;margin:0;">
-        <span class="prompt">$</span>
-        <code>pip install "axon[cli]"</code>
-        <button class="copy-btn" onclick="copyText('pip install \"axon[cli]\"', this)">copy</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Features ──────────────────────────────────────────────────────────── -->
-<section class="features" id="features">
-  <div class="section-inner">
-    <div class="section-label">Features</div>
-    <h2 class="section-title">Built for production AI workloads</h2>
-    <p class="section-sub">Everything you need to route inference at scale — security, observability, and resilience built in.</p>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3>Fully async</h3>
-        <p>Built on <code style="color:var(--accent);font-size:.85em">httpx</code> and <code style="color:var(--accent);font-size:.85em">asyncio</code> throughout. All providers are async context managers — connect, deploy, send, and disconnect without blocking your event loop.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <h3>SSRF protection</h3>
-        <p>All endpoint and IPFS URLs are validated against a private IP regex before any request is made — blocking 169.254.x.x, 10.x.x.x, 172.16–31.x.x, 192.168.x.x, and localhost.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🛡️</div>
-        <h3>Secret filtering</h3>
-        <p>Environment variables ending in <code style="color:var(--accent);font-size:.85em">_KEY</code>, <code style="color:var(--accent);font-size:.85em">_SECRET</code>, <code style="color:var(--accent);font-size:.85em">_TOKEN</code>, <code style="color:var(--accent);font-size:.85em">_PASSWORD</code>, or <code style="color:var(--accent);font-size:.85em">_MNEMONIC</code> are automatically stripped before any value reaches a cloud runtime.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔄</div>
-        <h3>Circuit breaker</h3>
-        <p>Per-provider circuit breakers with configurable failure thresholds and recovery timeouts. Unhealthy providers are automatically skipped and retried — no cascading failures.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📐</div>
-        <h3>Pydantic v2 models</h3>
-        <p>All config, deployment, cost, and health objects are fully typed Pydantic v2 models. IDE completion, runtime validation, and JSON serialisation all included.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🧩</div>
-        <h3>Pluggable providers</h3>
-        <p>Implement <code style="color:var(--accent);font-size:.85em">IAxonProvider</code> ABC and register in <code style="color:var(--accent);font-size:.85em">PROVIDER_REGISTRY</code>. Any custom backend — private cloud, on-prem, exotic hardware — slots in automatically.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">💰</div>
-        <h3>Cost estimation</h3>
-        <p>Call <code style="color:var(--accent);font-size:.85em">estimate()</code> before deploying to get a USD breakdown per provider. Compare across all 10 providers in one <code style="color:var(--accent);font-size:.85em">estimate_all()</code> call.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🌐</div>
-        <h3>OpenAI-compatible inference</h3>
-        <p>Install <code style="color:var(--accent);font-size:.85em">axon[inference]</code> for a FastAPI server exposing <code style="color:var(--accent);font-size:.85em">/v1/models</code> and <code style="color:var(--accent);font-size:.85em">/v1/chat/completions</code> — drop-in replacement for OpenAI's endpoint.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── TypeScript track ──────────────────────────────────────────────────── -->
-<section style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4rem 2rem;">
-  <div class="section-inner">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;" class="ts-grid">
-      <div>
-        <div class="section-label">TypeScript SDK</div>
-        <h2 class="section-title" style="margin-bottom:0.75rem;">Also available for TypeScript &amp; Node.js</h2>
-        <p style="color:var(--muted);font-size:1rem;margin-bottom:1.5rem;">The <code style="color:var(--accent)">@axonsdk</code> monorepo brings the same provider-agnostic interface to the JavaScript ecosystem — with packages for Node.js, CLI, OpenAI-compatible inference, and React Native mobile.</p>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.75rem;">
-          <li style="display:flex;gap:0.75rem;font-size:0.9rem;color:var(--muted)"><span style="color:var(--accent);font-weight:700;">✓</span> <code style="color:var(--accent);font-size:.85em">@axonsdk/sdk</code> — core client for Node.js and edge runtimes</li>
-          <li style="display:flex;gap:0.75rem;font-size:0.9rem;color:var(--muted)"><span style="color:var(--accent);font-weight:700;">✓</span> <code style="color:var(--accent);font-size:.85em">@axonsdk/inference</code> — OpenAI-compatible endpoint for Express / Next.js</li>
-          <li style="display:flex;gap:0.75rem;font-size:0.9rem;color:var(--muted)"><span style="color:var(--accent);font-weight:700;">✓</span> <code style="color:var(--accent);font-size:.85em">@axonsdk/mobile</code> — React Native hooks for iOS &amp; Android</li>
-          <li style="display:flex;gap:0.75rem;font-size:0.9rem;color:var(--muted)"><span style="color:var(--accent);font-weight:700;">✓</span> <code style="color:var(--accent);font-size:.85em">@axonsdk/cli</code> — same <code style="color:var(--accent);font-size:.85em">axon</code> commands for JS projects</li>
-        </ul>
-        <a class="btn-secondary" href="https://github.com/deyzho/axon-ts" target="_blank" style="font-size:0.9rem;padding:0.6rem 1.4rem;">View @axonsdk on GitHub →</a>
-      </div>
-      <div>
-        <div class="code-block">
-          <div class="code-header">
-            <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
-            <span style="margin-left:0.5rem;font-size:0.75rem;color:var(--muted);">index.ts</span>
-          </div>
-<pre><span class="kw">import</span> { <span class="obj">AxonClient</span> } <span class="kw">from</span> <span class="str">'@axonsdk/sdk'</span>;
-
-<span class="kw">const</span> client = <span class="kw">new</span> <span class="fn">AxonClient</span>({
-  provider: <span class="str">'ionet'</span>,
-  secretKey: process.env.<span class="obj">AXON_SECRET_KEY</span>,
-});
-
-<span class="kw">await</span> client.<span class="fn">connect</span>();
-
-client.<span class="fn">onMessage</span>((msg) => {
-  console.<span class="fn">log</span>(<span class="str">'Result:'</span>, msg.payload.result);
-});
-
-<span class="kw">await</span> client.<span class="fn">send</span>(<span class="str">'worker-id'</span>, {
-  prompt: <span class="str">'Summarise this article…'</span>,
-});
-
-<span class="kw">await</span> client.<span class="fn">disconnect</span>();</pre>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<style>
-  @media (max-width: 860px) { .ts-grid { grid-template-columns: 1fr !important; } }
-</style>
-
-<!-- ── CTA ───────────────────────────────────────────────────────────────── -->
-<section class="cta-section">
-  <div class="section-inner">
-    <h2>Start routing AI workloads today</h2>
-    <p>One pip install. Any provider. Zero lock-in. Apache-2.0 licensed and fully open source.</p>
+  <!-- Hero -->
+  <header class="hero">
+    <div class="badge">⚡ v0.2 · TypeScript &amp; Python</div>
+    <h1>One SDK. Any AI compute.<br/><em>Any language.</em></h1>
+    <p class="hero-sub">
+      AxonSDK routes AI inference to the fastest, cheapest backend — GPU clusters,
+      TEE nodes, or hyperscale clouds — through a single, provider-agnostic interface.
+      Available for TypeScript and Python, with the same shape in both.
+    </p>
     <div class="hero-ctas">
-      <a class="btn-primary" href="https://github.com/deyzho/axon" target="_blank">View on GitHub →</a>
-      <a class="btn-secondary" href="#quickstart">Quick start</a>
+      <a href="https://ts.axonsdk.dev" class="btn-primary">TypeScript SDK →</a>
+      <a href="https://py.axonsdk.dev" class="btn-secondary">Python SDK →</a>
     </div>
-    <div class="install-strip" style="margin-top:2.5rem;">
-      <span class="prompt">$</span>
-      <code>pip install axonsdk-py</code>
-      <button class="copy-btn" onclick="copyText('pip install axonsdk-py', this)">copy</button>
+  </header>
+
+  <!-- Language picker -->
+  <section class="lang-picker" id="get-started">
+    <div class="lang-card ts">
+      <div class="lang-card-head">
+        <span class="lang-icon">TS</span>
+        <span class="lang-title">TypeScript &amp; Node.js</span>
+      </div>
+      <p class="lang-sub">
+        Full-featured SDK for Node, Next.js, Cloudflare Workers, and React Native.
+        Drop-in OpenAI-compatible inference handler included.
+      </p>
+      <div class="lang-install">
+        <span class="prompt">$</span>
+        <code>npm install @axonsdk/sdk</code>
+      </div>
+      <div class="lang-meta">
+        <span>📦 <code>@axonsdk/sdk</code></span>
+        <span>🧩 CLI · Mobile · Inference</span>
+      </div>
+      <a href="https://ts.axonsdk.dev" class="lang-link">Explore the TypeScript SDK →</a>
     </div>
-  </div>
-</section>
 
-<!-- ── Footer ────────────────────────────────────────────────────────────── -->
-<footer>
-  <div class="footer-links">
-    <a href="https://github.com/deyzho/axon" target="_blank">GitHub (Python)</a>
-    <a href="https://github.com/deyzho/axon-ts" target="_blank">GitHub (TypeScript)</a>
-    <a href="https://pypi.org/project/axonsdk-py" target="_blank">PyPI</a>
-    <a href="https://github.com/deyzho/axon/blob/master/LICENSE" target="_blank">Apache-2.0</a>
-  </div>
-  <p>Axon · Provider-agnostic edge AI routing · Built with Python 3.11+</p>
-</footer>
+    <div class="lang-card py">
+      <div class="lang-card-head">
+        <span class="lang-icon">PY</span>
+        <span class="lang-title">Python 3.11+</span>
+      </div>
+      <p class="lang-sub">
+        Async-native Python SDK with OpenAI-compatible calls, automatic retries,
+        and live provider pricing. Type-checked end to end.
+      </p>
+      <div class="lang-install">
+        <span class="prompt">$</span>
+        <code>pip install axonsdk-py</code>
+      </div>
+      <div class="lang-meta">
+        <span>📦 <code>axonsdk-py</code></span>
+        <span>🐍 asyncio · mypy-strict</span>
+      </div>
+      <a href="https://py.axonsdk.dev" class="lang-link">Explore the Python SDK →</a>
+    </div>
+  </section>
 
-<script>
-  function copyInstall() {
-    const cmd = document.getElementById('install-cmd').textContent;
-    copyText(cmd, event.target);
-  }
+  <!-- Pitch -->
+  <section class="pitch">
+    <div class="section-inner">
+      <div class="section-label">Why AxonSDK</div>
+      <h2 class="section-title">Route AI once.<br/>Ship everywhere.</h2>
+      <p class="section-sub">
+        Infrastructure moves fast. AxonSDK keeps your application code still —
+        swap providers, regions, or runtimes without touching inference logic.
+      </p>
+      <div class="pitch-grid">
+        <div class="pitch-card">
+          <div class="pitch-icon">🔌</div>
+          <div class="pitch-title">Provider-agnostic</div>
+          <p class="pitch-desc">One interface for io.net, Akash, Acurast, Fluence, Koii, AWS, GCP, Azure, Cloudflare, and Fly.io.</p>
+        </div>
+        <div class="pitch-card">
+          <div class="pitch-icon">🎯</div>
+          <div class="pitch-title">Smart routing</div>
+          <p class="pitch-desc">Circuit breaking, health monitoring, and automatic failover across providers with live pricing signals.</p>
+        </div>
+        <div class="pitch-card">
+          <div class="pitch-icon">🧠</div>
+          <div class="pitch-title">OpenAI-compatible</div>
+          <p class="pitch-desc">Drop-in <code>/v1/chat/completions</code> endpoint — point your existing OpenAI client at AxonSDK.</p>
+        </div>
+        <div class="pitch-card">
+          <div class="pitch-icon">🔐</div>
+          <div class="pitch-title">Safe by default</div>
+          <p class="pitch-desc">SSRF protection, HTTPS-only egress, and DNS-rebinding defence built into every request.</p>
+        </div>
+        <div class="pitch-card">
+          <div class="pitch-icon">📦</div>
+          <div class="pitch-title">Two languages, one shape</div>
+          <p class="pitch-desc">The same config, the same methods, the same mental model — in TypeScript and Python.</p>
+        </div>
+        <div class="pitch-card">
+          <div class="pitch-icon">🆓</div>
+          <div class="pitch-title">Open source, Apache-2.0</div>
+          <p class="pitch-desc">Free forever. No telemetry. No lock-in. Fork it, audit it, self-host the router.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  function copyText(text, btn) {
-    navigator.clipboard.writeText(text).then(() => {
-      const orig = btn.textContent;
-      btn.textContent = 'copied!';
-      btn.style.color = 'var(--accent)';
-      setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1800);
-    });
-  }
+  <!-- Code comparison -->
+  <section class="compare">
+    <div class="section-inner center">
+      <div class="section-label">Same shape, two languages</div>
+      <h2 class="section-title">Run the same call from TypeScript or Python.</h2>
+      <p class="section-sub">
+        Move between languages without rethinking your inference layer.
+      </p>
+    </div>
+    <div class="section-inner">
+      <div class="compare-grid">
+        <div class="code-block ts-block">
+          <div class="code-header">
+            <span class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+            chat.ts
+          </div>
+<pre><span class="kw">import</span> { <span class="obj">AxonRouter</span> } <span class="kw">from</span> <span class="str">'@axonsdk/sdk'</span>;
 
-  function hookTab(id) {
-    document.querySelectorAll('#hook-deploy, #hook-openai').forEach(p => p.classList.remove('active'));
-    document.getElementById('hook-' + id).classList.add('active');
-    document.querySelectorAll('.hook-grid .tab-btn').forEach((b, i) => {
-      b.classList.toggle('active', (i === 0 && id === 'deploy') || (i === 1 && id === 'openai'));
-    });
-  }
+<span class="kw">const</span> router = <span class="kw">new</span> <span class="fn">AxonRouter</span>({
+  providers: [<span class="str">'ionet'</span>, <span class="str">'akash'</span>, <span class="str">'acurast'</span>],
+  strategy:  <span class="str">'cheapest-healthy'</span>,
+});
 
-  function qsTab(id) {
-    document.querySelectorAll('#qs-install, #qs-router').forEach(p => p.classList.remove('active'));
-    document.getElementById('qs-' + id).classList.add('active');
-    document.querySelectorAll('.demo .tab-btn').forEach((b, i) => {
-      b.classList.toggle('active', (i === 0 && id === 'install') || (i === 1 && id === 'router'));
-    });
-  }
-</script>
+<span class="kw">const</span> res = <span class="kw">await</span> router.<span class="fn">send</span>({
+  model:    <span class="str">'axon-llama-3-70b'</span>,
+  messages: [{ role: <span class="str">'user'</span>, content: <span class="str">'ping'</span> }],
+});
+
+<span class="fn">console</span>.<span class="fn">log</span>(res.choices[<span class="num">0</span>].message.content);</pre>
+        </div>
+        <div class="code-block py-block">
+          <div class="code-header">
+            <span class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+            chat.py
+          </div>
+<pre><span class="kw">from</span> <span class="obj">axonsdk</span> <span class="kw">import</span> AxonRouter
+
+router = <span class="fn">AxonRouter</span>(
+    providers=[<span class="str">"ionet"</span>, <span class="str">"akash"</span>, <span class="str">"acurast"</span>],
+    strategy=<span class="str">"cheapest-healthy"</span>,
+)
+
+res = <span class="kw">await</span> router.<span class="fn">send</span>(
+    model=<span class="str">"axon-llama-3-70b"</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"ping"</span>}],
+)
+
+<span class="fn">print</span>(res.choices[<span class="num">0</span>].message.content)</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Providers -->
+  <section class="providers">
+    <div class="section-inner">
+      <div class="section-label">Supported providers</div>
+      <h2 class="section-title">Ten backends.<br/>One integration.</h2>
+      <p class="section-sub">
+        Edge GPU networks, TEE processors, and hyperscale clouds — all reachable
+        through the same AxonSDK call. Add a provider; don't rewrite your app.
+      </p>
+      <div class="provider-grid">
+        <div class="provider-chip"><span class="pname">io.net</span><span class="pkind">DePIN · GPU</span></div>
+        <div class="provider-chip"><span class="pname">Akash</span><span class="pkind">DePIN · GPU</span></div>
+        <div class="provider-chip"><span class="pname">Acurast</span><span class="pkind">DePIN · TEE</span></div>
+        <div class="provider-chip"><span class="pname">Fluence</span><span class="pkind">DePIN · Compute</span></div>
+        <div class="provider-chip"><span class="pname">Koii</span><span class="pkind">DePIN · Compute</span></div>
+        <div class="provider-chip"><span class="pname">AWS</span><span class="pkind">Cloud · SageMaker / EC2</span></div>
+        <div class="provider-chip"><span class="pname">GCP</span><span class="pkind">Cloud · Vertex / GKE</span></div>
+        <div class="provider-chip"><span class="pname">Azure</span><span class="pkind">Cloud · AI Foundry</span></div>
+        <div class="provider-chip"><span class="pname">Cloudflare</span><span class="pkind">Edge · Workers AI</span></div>
+        <div class="provider-chip"><span class="pname">Fly.io</span><span class="pkind">Edge · GPU</span></div>
+      </div>
+      <div class="provider-legend">
+        <span><span class="dot depin"></span>DePIN networks</span>
+        <span><span class="dot cloud"></span>Hyperscale cloud</span>
+        <span><span class="dot edge"></span>Edge compute</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Start routing AI, today.</h2>
+    <p>Pick your language. Install in one line. Change providers without changing code.</p>
+    <div class="hero-ctas">
+      <a href="https://ts.axonsdk.dev" class="btn-primary">TypeScript SDK →</a>
+      <a href="https://py.axonsdk.dev" class="btn-secondary">Python SDK →</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand"><span class="bolt">⚡</span> AxonSDK</div>
+      <div class="footer-links">
+        <a href="https://ts.axonsdk.dev">TypeScript</a>
+        <a href="https://py.axonsdk.dev">Python</a>
+        <a href="https://github.com/deyzho/axon-ts" target="_blank" rel="noopener">axon-ts</a>
+        <a href="https://github.com/deyzho/axon" target="_blank" rel="noopener">axon</a>
+        <a href="https://status.axonsdk.dev">Status</a>
+        <a href="mailto:deyzho@me.com">Contact</a>
+      </div>
+      <div>Apache-2.0</div>
+    </div>
+  </footer>
 </body>
 </html>

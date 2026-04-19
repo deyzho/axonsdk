@@ -1,5 +1,18 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "py.axonsdk.dev" }],
+      "destination": "/py/index.html"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "py.axonsdk.dev" }],
+      "destination": "/py/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
