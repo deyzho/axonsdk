@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "axonsdk-py"
-version = "0.1.10"
+version = "0.1.11"
 description = "Provider-agnostic edge compute SDK for AI workload routing"
 readme = "README.md"
 license = { text = "Apache-2.0" }

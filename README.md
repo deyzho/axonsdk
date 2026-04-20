@@ -1,7 +1,7 @@
 # Axon SDK
 
 [![CI](https://github.com/deyzho/axon/actions/workflows/publish.yml/badge.svg)](https://github.com/deyzho/axon/actions/workflows/publish.yml)
-[![PyPI](https://img.shields.io/badge/PyPI-pending-orange)](https://github.com/pypi/support/issues)
+[![PyPI](https://img.shields.io/pypi/v/axonsdk-py?color=f97316)](https://pypi.org/project/axonsdk-py/)
 [![Python](https://img.shields.io/badge/python-3.11%20|%203.12%20|%203.13-blue)](https://pypi.org/project/axonsdk-py/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
