@@ -1,4 +1,4 @@
-"""Axon CLI built with Typer."""
+"""AxonSDK CLI built with Typer."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from rich.table import Table
 
 app = typer.Typer(
     name="axon",
-    help="Axon — Provider-agnostic edge compute SDK for AI workload routing",
+    help="AxonSDK — Provider-agnostic edge compute SDK for AI workload routing",
     add_completion=False,
 )
 console = Console()
