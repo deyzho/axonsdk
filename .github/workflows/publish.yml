@@ -24,6 +24,13 @@ jobs:
       - name: Install dependencies
         run: pip install -e ".[dev,blockchain,inference,aws,gcp,azure]"
 
+      - name: Audit dependencies (pip-audit)
+        run: |
+          pip install pip-audit
+          # Freeze deps but skip our own package (not yet on PyPI for lookup).
+          pip freeze --exclude-editable | grep -v "^axonsdk-py" > /tmp/requirements-frozen.txt
+          pip-audit -r /tmp/requirements-frozen.txt --desc --strict
+
       - name: Lint (ruff)
         run: ruff check src/axon
 
