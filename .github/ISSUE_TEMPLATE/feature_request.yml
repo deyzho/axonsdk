@@ -1,0 +1,28 @@
+name: Feature request
+description: Suggest a feature or improvement
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing, please check the [ROADMAP](../ROADMAP.md) and search open issues — the feature may already be planned.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the use case. Features motivated by a concrete problem ship faster than nice-to-haves.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: API shape, CLI flag, config option — whatever form the feature would take.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you've tried, including workarounds that don't quite work.

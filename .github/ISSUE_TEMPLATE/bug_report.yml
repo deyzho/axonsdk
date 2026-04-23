@@ -1,0 +1,82 @@
+name: Bug report
+description: Report a bug in axonsdk-py
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. A clear repro makes fixes land faster.
+
+        For security issues, do **not** open an issue — follow the process in [SECURITY.md](../SECURITY.md).
+  - type: input
+    id: version
+    attributes:
+      label: axonsdk-py version
+      description: Output of `pip show axonsdk-py | grep Version`.
+      placeholder: "0.1.12"
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: "3.12.3"
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: OS / platform
+      placeholder: "Ubuntu 22.04 / macOS 14.5 / Windows 11"
+    validations:
+      required: true
+  - type: dropdown
+    id: extras
+    attributes:
+      label: Installed extras
+      description: Which optional extras are installed? (from `pip install "axonsdk-py[...]"`)
+      multiple: true
+      options:
+        - "core (no extras)"
+        - "blockchain"
+        - "inference"
+        - "cli"
+        - "aws"
+        - "gcp"
+        - "azure"
+        - "all"
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Minimal steps or code snippet that reproduces the issue.
+      placeholder: |
+        1. `pip install axonsdk-py==0.1.12`
+        2. Run the following snippet:
+           ```python
+           ...
+           ```
+        3. Observe error: ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include full stack traces and error messages.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Provider in use, deployment target, or anything else that might matter.

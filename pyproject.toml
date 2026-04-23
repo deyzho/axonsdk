@@ -71,7 +71,7 @@ axon = "axon.cli.main:app"
 
 [project.urls]
 Homepage = "https://axonsdk.dev"
-Documentation = "https://axonsdk.dev/docs"
+Documentation = "https://github.com/deyzho/axon#readme"
 Repository = "https://github.com/deyzho/axon"
 Issues = "https://github.com/deyzho/axon/issues"
 

@@ -1,4 +1,4 @@
-# Contributing to Axon SDK (Python)
+# Contributing to AxonSDK (Python)
 
 Thank you for your interest in contributing! This guide covers everything you need to get started.
 
@@ -175,6 +175,33 @@ class MyProvider(IAxonProvider):
 - **Line length:** 100 characters
 - **Python target:** 3.11+ syntax; use `from __future__ import annotations` in all files
 - **No `# type: ignore`** without a specific error code and comment explaining why
+
+---
+
+## Versioning policy
+
+AxonSDK follows [Semantic Versioning 2.0](https://semver.org/spec/v2.0.0.html). Because the project is pre-1.0, the rules are tighter than a simple reading of SemVer:
+
+- **`0.x.y`** — minor bumps (`0.x.Y`) may contain breaking changes, but every breaking change must be documented. Patch bumps (`0.X.y`) are strictly bug-fix / non-breaking.
+- **`≥1.0`** — breaking changes require a major bump. Deprecations are announced at least one minor version before removal.
+
+### Breaking-change requirements
+
+Every breaking change must:
+
+1. Be listed in `CHANGELOG.md` under a **Changed — Breaking** heading.
+2. Include a **Migration** block with copy-pastable before/after snippets for anything a consumer might actually be doing. Don't make people read source code to upgrade.
+3. Be called out in the GitHub Release notes, not buried in the commit message.
+
+### Release checklist
+
+When preparing a release:
+
+1. Bump `version = "..."` in `pyproject.toml`.
+2. Add a new top-of-file section to `CHANGELOG.md` with the version and date.
+3. Tag `vX.Y.Z` — CI publishes to PyPI via OIDC Trusted Publishing and creates the GitHub Release automatically.
+
+Do **not** manually edit `__version__` in `src/axon/__init__.py` — it is read dynamically from package metadata via `importlib.metadata.version("axonsdk-py")`.
 
 ---
 
